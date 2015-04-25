@@ -32,11 +32,11 @@ group :test do
 end
 
 # Optional PostgreSQL for production
-gem 'pg', group: :postgresql
+#gem 'pg', group: :postgresql
 # Optional MySQL for production
-gem 'mysql2', group: :mysql
+gem 'mysql2', group: :production
 # Optional SQLite for development
-gem 'sqlite3', group: :sqlite
+gem 'sqlite3', group: [:development, :test]
 
 # authentication
 gem 'devise'
