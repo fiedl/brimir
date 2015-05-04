@@ -77,4 +77,26 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+  
+  # Email settings.
+  config.action_mailer.smtp_settings = {
+    address: Rails.application.secrets.smtp_server,
+    user_name: Rails.application.secrets.smtp_user,
+    password: Rails.application.secrets.smtp_password,
+    domain: Rails.application.secrets.smtp_domain,
+    enable_starttls_auto: true,
+    # only if certificate malfunctions:
+    # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
+  }
+  
+  # See: http://stackoverflow.com/a/12609856/2066546
+  config.action_mailer.default_options = {    
+    from: Rails.application.secrets.smtp_from
+  }
+  
+  config.action_mailer.default_url_options = { 
+    host: Rails.application.secrets.url_options_host,
+    protocol: Rails.application.secrets.url_options_protocol
+  }
+  
 end
