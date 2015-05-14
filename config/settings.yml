@@ -1,8 +1,8 @@
 default: &defaults
   ignore_user_agent_locale: false
-  display_user_avatars: false
+  display_user_avatars: true
   default_user_avatar: 'identicon'
-  user_avatar_api_url: ''
+  user_avatar_api_url: 'https://wingolfsplattform.org/avatars?email=:email&size=:size'
 
 development:
   <<: *defaults
