@@ -12,14 +12,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http:gcwww.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ *= require fancybox
  */
 
 @import "variables";
 @import "select2";
 @import "font-awesome";
-@import "fancybox";
 @import "avatar";
 @import "foundation_and_overrides";
 @import "foundation/functions";
@@ -121,7 +121,7 @@ table thead tr th{
 	border: 1px solid #eaeef0;
 	padding: 30px;
 }
-.replies ul{
+ul.accordion{
 	list-style-type: none;
 	margin-left: 0;
 }
@@ -135,14 +135,9 @@ table thead tr th{
 	background: none;
 }
 
-.accordion-navigation > a:before {
-	@extend .fa;
-	@extend .fa-angle-right;
-	@extend .fa-fw;
-}
-
-.accordion-navigation.active > a:before {
-	@extend .fa-angle-down;
+.accordion .accordion-navigation > a {
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .pagination {
