@@ -20,9 +20,10 @@ class ApplicationController < ActionController::Base
   end
   protect_from_forgery
 
-  before_filter :authenticate_user!
-  before_filter :set_locale
-  before_filter :load_labels, if: :user_signed_in?
+  before_action :load_tenant
+  before_action :authenticate_user!
+  before_action :set_locale
+  before_action :load_labels, if: :user_signed_in?
 
   check_authorization unless: :devise_controller?
 
@@ -36,33 +37,41 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-    def load_labels
-      @labels = Label.viewable_by(current_user).ordered
-    end
 
-    def set_locale
-      if user_signed_in? && !current_user.locale.blank?
-        I18n.locale = current_user.locale
-      else
-        locales = []
+  def load_labels
+    @labels = Label.viewable_by(current_user).ordered
+  end
 
-        Dir.open("#{Rails.root}/config/locales").each do |file|
-          unless ['.', '..'].include?(file)
-            # strip of .yml
-            locales << file[0...-4]
-          end
-        end
+  def set_locale
+    if user_signed_in? && !current_user.locale.blank?
+      I18n.locale = current_user.locale
+    else
+      locales = []
 
-        if AppSettings.ignore_user_agent_locale
-          I18n.locale = I18n.default_locale
-        else
-          I18n.locale = http_accept_language.compatible_language_from(locales)
-        end
-        if user_signed_in?
-          current_user.locale = I18n.locale
-          current_user.save
+      Dir.open("#{Rails.root}/config/locales").each do |file|
+        unless ['.', '..'].include?(file)
+          # strip of .yml
+          locales << file[0...-4]
         end
       end
-    end
 
+      if AppSettings.ignore_user_agent_locale
+        I18n.locale = I18n.default_locale
+      else
+        I18n.locale = http_accept_language.compatible_language_from(locales)
+      end
+      if user_signed_in?
+        current_user.locale = I18n.locale
+        current_user.save
+      end
+    end
+  end
+
+  def load_tenant
+    if request.subdomain.blank?
+      Tenant.current_domain = request.domain
+    else
+      Tenant.current_domain = "#{request.subdomain}.#{request.domain}"
+    end
+  end
 end

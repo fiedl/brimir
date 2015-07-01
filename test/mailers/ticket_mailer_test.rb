@@ -42,6 +42,7 @@ class TicketMailerTest < ActionMailer::TestCase
 
   test 'email threads are recognized correctly and assignee \
       is notified' do
+    Tenant.current_domain = Tenant.first.domain
 
     thread_start = read_fixture('thread_start').join
     thread_reply = read_fixture('thread_reply').join
@@ -104,6 +105,24 @@ class TicketMailerTest < ActionMailer::TestCase
     assert_difference 'EmailAddress.where(verification_token: nil).count' do
       TicketMailer.receive(verification)
     end
+  end
+
+  test 'reply to is used for incoming mail' do
+    email = read_fixture('reply_to').join
+
+    # ticket is created
+    assert_difference 'Ticket.count' do
+
+      # account for user created
+      assert_difference 'User.count' do
+
+        TicketMailer.receive(email)
+
+      end
+
+    end
+
+    assert_equal 'reply@address.com', User.last.email 
   end
 
 end
