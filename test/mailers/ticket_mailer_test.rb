@@ -38,6 +38,9 @@ class TicketMailerTest < ActionMailer::TestCase
       end
 
     end
+
+    assert_equal email_addresses(:brimir),
+        Ticket.order(:id).last.to_email_address
   end
 
   test 'email threads are recognized correctly and assignee \
@@ -60,7 +63,7 @@ class TicketMailerTest < ActionMailer::TestCase
     end
 
     # agents receive notifications
-    assert_difference 'ActionMailer::Base.deliveries.size', 1 do
+    assert_difference 'ActionMailer::Base.deliveries.size' do
 
       # reply created?
       assert_difference 'Reply.count' do
@@ -124,5 +127,4 @@ class TicketMailerTest < ActionMailer::TestCase
 
     assert_equal 'reply@address.com', User.last.email 
   end
-
 end

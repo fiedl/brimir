@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class TicketMailer < ActionMailer::Base
+  include BounceHelper
 
   def encode(string)
     string.encode('UTF-8', invalid: :replace, undef: :replace)
@@ -92,7 +93,7 @@ class TicketMailer < ActionMailer::Base
       ticket.save
 
       # add reply
-      incoming = Reply.create!({
+      incoming = Reply.create({
         content: content,
         ticket_id: ticket.id,
         from: from_address,
@@ -102,13 +103,16 @@ class TicketMailer < ActionMailer::Base
 
     else
 
+      to_email_address = EmailAddress.find_first_verified_email(email.to)
+
       # add new ticket
-      ticket = Ticket.create!({
+      ticket = Ticket.create({
         from: from_address,
         subject: subject,
         content: content,
         message_id: email.message_id,
         content_type: content_type,
+        to_email_address: to_email_address,
       })
 
       incoming = ticket
@@ -127,7 +131,7 @@ class TicketMailer < ActionMailer::Base
         }
 
         file.original_filename = attachment.filename
-        file.content_type = attachment.mime_type 
+        file.content_type = attachment.mime_type
 
         a = incoming.attachments.create(file: file)
         a.save! # FIXME do we need this because of paperclip?
@@ -147,7 +151,10 @@ class TicketMailer < ActionMailer::Base
       incoming.save
     end
 
-    return incoming
-
+    if bounced?(email)
+      nil
+    else
+      incoming
+    end
   end
 end

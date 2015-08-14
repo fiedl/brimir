@@ -76,7 +76,7 @@ class TicketsControllerTest < ActionController::TestCase
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       assert_no_difference 'Ticket.count' do
         post :create, ticket: {
-            from: '',
+            from: 'invalid',
             content: '',
             subject: '',
         }
@@ -164,6 +164,9 @@ class TicketsControllerTest < ActionController::TestCase
     # should have this icon for label color update javascript (sidebar)
     assert_select 'aside ul li span'
 
+    # should have selected same outgoing address as original received
+    assert_select 'option[selected="selected"]' +
+        "[value=\"#{email_addresses(:brimir).id}\"]"
   end
 
   test 'should email assignee if ticket is assigned by somebody else' do
@@ -298,4 +301,31 @@ class TicketsControllerTest < ActionController::TestCase
     end
   end
 
+  test 'should not notify when a bounce message is received' do
+    email = File.new('test/fixtures/ticket_mailer/bounce').read
+
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+      assert_difference 'Ticket.count' do
+
+        post :create, message: email, format: :json
+
+        assert_response :success
+
+      end
+    end
+  end
+
+  test 'should not save invalid' do
+    email = File.new('test/fixtures/ticket_mailer/invalid').read
+
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+      assert_no_difference 'Ticket.count' do
+
+        post :create, message: email, format: :json
+
+        assert_response :unprocessable_entity
+
+      end
+    end
+  end
 end

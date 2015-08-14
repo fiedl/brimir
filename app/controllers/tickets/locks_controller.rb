@@ -14,38 +14,29 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module CreateFromUser
-  extend ActiveSupport::Concern
+module Tickets
+  class LocksController < ApplicationController
+    skip_authorization_check only: [:create, :destroy]
 
-  included do
-    attr_accessor :from
-
-    def from=(email)
-
-      unless email.blank?
-
-        # search using the same method as Devise validation
-        from_user = User.find_first_by_auth_conditions(email: email)
-
-        if !from_user
-          password_length = 12
-          password = Devise.friendly_token.first(password_length)
-          from_user = User.create(email: email, password: password,
-              password_confirmation: password)
-
-          if !from_user
-            errors.add(:from, :invalid)
-          end
-        end
-
-        self.user = from_user
+    def create
+      @ticket = Ticket.find(params[:ticket_id])
+      if can? :update, @ticket
+        @ticket.locked_by = current_user
+        @ticket.locked_at = Time.zone.now
+        @ticket.save
       end
-
     end
 
-    def from
-      user.email unless user.nil?
+    def destroy
+      @ticket = Ticket.find(params[:ticket_id])
+      # if labels can be removed by this user,
+      # he can also unlock tickets, because he is not limited
+      if can?(:destroy, Labeling.new(labelable: @ticket))
+        @ticket.locked_by = nil
+        @ticket.locked_at = nil
+        @ticket.save
+      end
+      redirect_to ticket_path(@ticket)
     end
   end
-
 end

@@ -31,8 +31,8 @@ Generate a secret\_key\_base in the secrets.yml file:
 
 Next, load the database schema and precompile assets:
 
-    rake db:schema:load RAILS_ENV=production
-    rake assets:precompile RAILS_ENV=production
+    bin/rake db:schema:load RAILS_ENV=production
+    bin/rake assets:precompile RAILS_ENV=production
 
 If you want to use LDAP, configure config/ldap.yml accordingly, then change the auth strategy in your application config in file config/application.rb:
 
@@ -42,6 +42,16 @@ If you want to use LDAP, configure config/ldap.yml accordingly, then change the 
 
     bin/rails console production
     u = User.new({ email: 'your@email.address', password: 'somepassword', password_confirmation: 'somepassword' }); u.agent = true; u.save!
+
+Updating
+--------
+First download the new code in the same directory by unpacking a release tarball or by running `git pull` (when you cloned the repo earlier). After updating code run the following commands to install necessary gem updates, migrate the database and regenerate precompiled assets.
+
+    bundle install
+    bin/rake db:migrate RAILS_ENV=production
+    bin/rake assets:precompile RAILS_ENV=production
+    
+Don't forget to restart your application server (`touch tmp/restart.txt` for Passenger).
 
 Customization
 -------------
@@ -72,10 +82,8 @@ Some users have made requests for the following features. If you would like to c
 - Switchable property to support threads by using special tags in the subject line instead of relying on mail headers.
 - Support for hosted incoming mail services (Sendgrid, Mandrill), possibly using griddler gem.
 - Ability to sign in using a Single Sign On functionality based on Shared Token or JWT.
-- Queue sorting by column header.
 - Private note addition to tickets.
 - Automated replies based on the current rule system.
-- Closing issues from the overview page.
 - Remove user functionality, without losing ticket and reply information.
 - Adding knowledge base functionality.
 - Welcome mail for new users (after mailing a ticket for example) with their password.
@@ -92,6 +100,7 @@ Some users have made requests for the following features. If you would like to c
 - Mark tickets as duplicate, linking it to the duplicated ticket.
 - CC or BCC people from the reply form.
 - Ability to rename tickets (change their subject).
+- Ability to rename labels.
 
 License
 -------

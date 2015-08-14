@@ -1,3 +1,9 @@
+<% if current_user.agent? %>
+  <% unless @ticket.locked?(current_user) %>
+    <%# execute JS to take/keep the ticket lock %>
+    <span data-lock-path="<%= ticket_lock_path(@ticket) %>"></span>
+  <% end %>
+<% end %>
 <div class="row collapse">
   <div class="large-8 medium-12 columns bl br">
     <div class="row bb ptm pbm collapse">
@@ -23,13 +29,13 @@
               <a href="#" data-dropdown="statuses-<%= @ticket.id %>">
                 <span class="fa fa-fw fa-<%= status_icon(@ticket.status) %> text-default"></span>
                 <span class="show-for-print hide"><%= t(:status) %>:</span>
-                <%= t(@ticket.status) %>
+                <%= t(@ticket.status, scope: 'activerecord.attributes.ticket.statuses') %>
               </a>
               <%= render 'status_dropdown', ticket: @ticket %>
             <% else %>
               <span class="fa fa-fw fa-<%= status_icon(@ticket.status) %>"></span>
               <span class="show-for-print hide"><%= t(:status) %>:</span>
-              <%= t(@ticket.status) %>
+              <%= t(@ticket.status, scope: 'activerecord.attributes.ticket.statuses') %>
             <% end %>
           </li>
           <li class="ib mrl">
@@ -69,19 +75,25 @@
           </li>
         </ul>
         <ul class="no-m">
-          <li class="ib">
-            <% if can? :update, @ticket %>
+          <li class="ib" data-labelings>
+            <% if can?(:create, Labeling.new(labelable: @ticket)) %>
               <a href="#" data-reveal-id="add-labels" class="radius label secondary mrs text-light">
                 <i class="fa fa-fw fa-plus"></i> <%= t(:add) %>
               </a>
             <% end %>
             <% @ticket.labelings.each do |labeling| %>
-              <span data-labelings="" class="ib no-m">
+              <span class="ib no-m">
                 <%= render labeling %>
               </span>
             <% end %>
           </li>
         </ul>
+
+        <% if @ticket.locked?(current_user) && can?(:destroy, Labeling.new(labelable: @ticket)) %>
+          <%= link_to t(:take_ticket_lock_from_user, user: @ticket.locked_by.email),
+              ticket_lock_path(@ticket), class: 'tiny alert button',
+              'data-method' => :delete %>
+        <% end %>
       </div>
     </div>
     <div class="row<% if @ticket.replies.size == 1 %> bb<% end %>">
@@ -161,6 +173,5 @@
     <a class="close-reveal-modal">&#215;</a>
   </div>
 <% end %>
-
 
 <%= render 'change_assignee_form', { ticket: @ticket } %>

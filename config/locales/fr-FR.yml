@@ -1,6 +1,6 @@
 # author: https://github.com/social-org
-fr-CA:
-  language_name: Canadienne-Française
+fr-FR:
+  language_name: Française
 # layouts/application
   new_ticket: Nouveau Billet
   inbox: Boîte de réception

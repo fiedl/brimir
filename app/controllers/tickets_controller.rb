@@ -31,6 +31,8 @@ class TicketsController < ApplicationController
     @reply.set_default_notifications!
 
     @labeling = Labeling.new(labelable: @ticket)
+
+    @outgoing_addresses = EmailAddress.verified.ordered
   end
 
   def index
@@ -119,7 +121,7 @@ class TicketsController < ApplicationController
       @ticket = Ticket.new(ticket_params)
     end
 
-    if @ticket.save
+    if !@ticket.nil? && @ticket.save
 
       Rule.apply_all(@ticket) unless @ticket.is_a?(Reply)
 
@@ -147,10 +149,14 @@ class TicketsController < ApplicationController
     respond_to do |format|
       format.html do
 
-        if @ticket.valid?
+        if !@ticket.nil? && @ticket.valid?
 
           if current_user.nil?
-            render 'create'
+            if request.xhr?
+              return render I18n.translate(:ticket_added)
+            else
+              render 'create'
+            end
           else
             redirect_to ticket_url(@ticket), notice: I18n::translate(:ticket_added)
           end
@@ -162,7 +168,13 @@ class TicketsController < ApplicationController
       end
 
       format.json do
-        render json: @ticket, status: :created
+        if @ticket.nil?
+          render json: {}, status: :created  # bounce mail handled correctly
+        elsif @ticket.valid?
+          render json: @ticket, status: :created
+        else
+          render json: @ticket, status: :unprocessable_entity
+        end
       end
 
       format.js { render }

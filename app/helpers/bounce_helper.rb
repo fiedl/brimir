@@ -14,38 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module CreateFromUser
-  extend ActiveSupport::Concern
+# module to recognize bounced mails based on some simple rules
+module BounceHelper
+  def bounced?(mail)
+    return true if mail.bounced?
+    return true if !mail.header['Return-Path'].nil? && mail['Return-Path'].value == ''
 
-  included do
-    attr_accessor :from
-
-    def from=(email)
-
-      unless email.blank?
-
-        # search using the same method as Devise validation
-        from_user = User.find_first_by_auth_conditions(email: email)
-
-        if !from_user
-          password_length = 12
-          password = Devise.friendly_token.first(password_length)
-          from_user = User.create(email: email, password: password,
-              password_confirmation: password)
-
-          if !from_user
-            errors.add(:from, :invalid)
-          end
-        end
-
-        self.user = from_user
-      end
-
-    end
-
-    def from
-      user.email unless user.nil?
-    end
+    false
   end
-
 end
