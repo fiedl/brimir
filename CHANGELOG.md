@@ -16,6 +16,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - If a ticket detail page is opened by an agent, it will be locked to avoid multiple agents from replying to the same ticket. Tickets are unlocked five minutes after the agent leaves the ticket detail page or by clicking the link on ticket detail by not limited agents.
 - The status of a ticket can now be changed directly when adding a reply.
 - Nice name outgoing email address support, i.e. `From: Test <test@test.nl>` instead of just the email address.
+- Opt-in other users in conversations.
+- Filter users by type and/or email.
+- Possible to inline-edit the label name.
+- Per user configuration option for plain text replies.
 
 ### Changed
 - The outgoing email address of replies will now be the same as the original incoming email addresses when it was configured correctly as an outgoing email address. The agent can choose a different address when replying.
@@ -24,7 +28,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Deprecated
 - Support for Ruby 1.9 has been dropped. We're not automatically testing it anymore.
 
+### Removed
+- Database migrations from Markdown to HTML and required gems.
+
 ### Fixed
 - More robust incoming email support.
 - The content of inline HTML style tags is now correctly removed as well.
 - Adding of labels to tickets updates the interface correctly again, this was broken since the redesign.
+- HTML entities are now correctly escaped and unescaped in ticket and reply content.

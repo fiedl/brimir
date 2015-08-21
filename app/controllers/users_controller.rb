@@ -52,6 +52,8 @@ class UsersController < ApplicationController
 
   def index
     @users = User.ordered.paginate(page: params[:page])
+    @users = @users.search(params[:q])
+    @users = @users.by_agent(params[:agent] == '1') unless params[:agent].blank?
   end
 
   def new
@@ -94,6 +96,7 @@ class UsersController < ApplicationController
           :time_zone,
           :locale,
           :per_page,
+          :prefer_plain_text,
           label_ids: []
       )
 

@@ -36,7 +36,7 @@ class RepliesController < ApplicationController
         @reply.notified_users.each do |user|
           mail = NotificationMailer.new_reply(@reply, user)
 
-          mail.deliver_now
+          mail.deliver_now unless EmailAddress.pluck(:email).include?(user.email)
           @reply.message_id = mail.message_id
         end
 
@@ -60,6 +60,7 @@ class RepliesController < ApplicationController
         :ticket_id,
         :message_id,
         :user_id,
+        :content_type,
         notified_user_ids: [],
         attachments_attributes: [
           :file
