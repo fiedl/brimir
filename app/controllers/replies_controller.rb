@@ -29,18 +29,41 @@ class RepliesController < ApplicationController
 
     authorize! :create, @reply
 
+    save_reply_and_redirect
+  end
+
+  def update
+    @reply.assign_attributes(reply_params)
+    save_reply_and_redirect
+  end
+
+  protected
+
+  def save_reply_and_redirect
     begin
-      Reply.transaction do
-        @reply.save!
+      if @reply.draft?
+        original_updated_at = @reply.ticket.updated_at
 
-        @reply.notified_users.each do |user|
-          mail = NotificationMailer.new_reply(@reply, user)
+        @reply.save
 
-          mail.deliver_now unless EmailAddress.pluck(:email).include?(user.email)
-          @reply.message_id = mail.message_id
+        # don't screw up the ordering of inbox by resetting updated_at
+        @reply.ticket.update_column :updated_at, original_updated_at
+
+        redirect_to @reply.ticket, notice: I18n::translate(:draft_saved)
+      else
+        Reply.transaction do
+          @reply.save!
+
+          @reply.notified_users.each do |user|
+            mail = NotificationMailer.new_reply(@reply, user)
+
+            mail.deliver_now unless EmailAddress.pluck(:email).include?(user.email)
+            @reply.message_id = mail.message_id
+          end
+
+          @reply.save!
         end
 
-        @reply.save!
         redirect_to @reply.ticket, notice: I18n::translate(:reply_added)
       end
     rescue => e
@@ -49,6 +72,21 @@ class RepliesController < ApplicationController
       Rails.logger.error "Backtrace: #{e.backtrace.join("\n")}"
       @outgoing_addresses = EmailAddress.verified.ordered
       render action: 'new'
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.eml do
+        begin
+          send_file @reply.raw_message.path(:original),
+              filename: "reply-#{@reply.id}.eml",
+              type: 'text/plain',
+              disposition: :attachment
+        rescue
+          raise ActiveRecord::RecordNotFound
+        end
+      end
     end
   end
 
@@ -61,6 +99,7 @@ class RepliesController < ApplicationController
         :message_id,
         :user_id,
         :content_type,
+        :draft,
         notified_user_ids: [],
         attachments_attributes: [
           :file

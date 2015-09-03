@@ -14,36 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'test_helper'
+module RawMessage
+  extend ActiveSupport::Concern
 
-class LabelingsControllerTest < ActionController::TestCase
+  included do
+    has_attached_file :raw_message,
+        path: Tenant.files_path
 
-  setup do
-    @labeling = labelings(:bug_ticket)
-    sign_in users(:alice)
-  end
-
-  test 'should create labeling' do
-
-    assert_difference 'Labeling.count' do
-
-      post :create, format: :js, labeling: {
-        labelable_id: tickets(:problem).id,
-        labelable_type: 'Ticket',
-        label: {
-          name: 'Hello'
-        }
-      }
-
-      assert_response :success
-    end
-  end
-
-  test 'should remove labeling' do
-    assert_difference 'Labeling.count', -1 do
-      delete :destroy, id: @labeling, format: :js
-
-      assert_response :success
-    end
+    do_not_validate_attachment_file_type :raw_message
   end
 end

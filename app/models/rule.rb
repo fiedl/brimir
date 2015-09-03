@@ -16,21 +16,24 @@
 
 # filter rules applied to a ticket when it is created
 class Rule < ActiveRecord::Base
-  validates :filter_field, :filter_value, presence: true
+  validates :filter_field, presence: true
 
-  enum filter_operation: [:contains]
+  enum filter_operation: [:contains, :equals]
   enum action_operation: [:assign_label, :notify_user, :change_status,
                           :change_priority, :assign_user]
 
   def filter(ticket)
-
     if ticket.respond_to?(filter_field)
-      value = ticket.send(filter_field)
+      value = ticket.send(filter_field).to_s
     else
-      value = ticket.attributes[filter_field]
+      value = ticket.attributes[filter_field].to_s
     end
 
-    value.include?(filter_value) if filter_operation == 'contains'
+    if filter_operation == 'contains'
+      value.include?(filter_value)
+    elsif filter_operation == 'equals'
+      value == filter_value
+    end
   end
 
   def execute(ticket)

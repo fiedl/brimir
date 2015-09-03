@@ -16,6 +16,7 @@
 
 class Ticket < ActiveRecord::Base
   include CreateFromUser
+  include RawMessage
 
   validates_presence_of :user_id
 
@@ -83,7 +84,7 @@ class Ticket < ActiveRecord::Base
   }
 
   scope :ordered, -> {
-    order(:created_at).reverse_order
+    order(:updated_at).reverse_order
   }
 
   scope :viewable_by, ->(user) {
@@ -101,7 +102,10 @@ class Ticket < ActiveRecord::Base
   }
 
   def set_default_notifications!
-    self.notified_user_ids = User.agents_to_notify.pluck(:id)
+    users = User.agents_to_notify.select do |user|
+      Ability.new(user).can? :show, self
+    end
+    self.notified_user_ids = users.map(&:id)
   end
 
   def status_times

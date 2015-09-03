@@ -59,10 +59,12 @@ en:
   minutes: minutes
   are_you_sure_empty_trash: Delete all tickets in the trash?
   locked_by_user: Ticket currently being handled by %{user}
+  ticket_id_created_by_at: '#%{id} created by %{user} at %{at}'
 
 # tickets/show
   add: Add
   ticket_by_at: By %{email} on %{at}
+  to_email: to %{email}
   no_content: No content
   ticket_id: Ticketnumber
   status: Status
@@ -106,6 +108,7 @@ en:
   send_reply: Send reply
   on_date_author_wrote: 'On %{date}, %{author} wrote:'
   notification_will_be_sent_to: Your notification will be sent to
+  save_as_draft: Save as draft
 
 # replies/_reply
   reply_by: Reply by
@@ -154,6 +157,13 @@ en:
   access_control: Access Control
   have_access_to_label: User has access to all tickets with any of these labels.
 
+# settings/edit
+  change_settings: Change settings
+  localization_settings: Localization settings
+
+# controllers/settings
+  settings_saved: Settings saved
+
 # controllers/attachments
   file_not_found: File not found
 
@@ -170,6 +180,7 @@ en:
 
 # controllers/replies
   reply_added: Reply added
+  draft_saved: Draft saved
 
 # controllers/omniauth
   already_linked_accounts: Already linked with Google Account
@@ -247,6 +258,7 @@ en:
         filter_operation: Operator
         filter_operations:
           contains: contains
+          equals: is equal to
         filter_value: Value
         action_operation: Action to perform
         action_operations:
@@ -262,3 +274,8 @@ en:
         name: Name
         default: Use as default outgoing mail address
         verification_token: Verified
+
+      tenant:
+        default_locale: Default language
+        ignore_user_agent_locale: Ignore preferred browser language
+        default_time_zone: Default time zone

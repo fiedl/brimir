@@ -63,7 +63,7 @@ Incoming email
 --------------
 Incoming emails can be posted to the tickets url by using the script found in scripts/post-mail. Create an alias in your `/etc/aliases` file like this:
 
-    brimir: "|/bin/bash /path/to/your/brimir/repo/script/post-mail http://yoururl.com/tickets.json"
+    brimir: "|/bin/sh /path/to/your/brimir/repo/script/post-mail http://yoururl.com/tickets.json"
 
 Now sending an email to brimir@yoururl.com should start curl and post the email to your brimir installation.
 
@@ -100,6 +100,7 @@ Some users have made requests for the following features. If you would like to c
 - Mark tickets as duplicate, linking it to the duplicated ticket.
 - Ability to rename tickets (change their subject).
 - Ability to rename labels.
+- Support inline images (CID).
 
 License
 -------

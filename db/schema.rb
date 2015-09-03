@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150821131046) do
+ActiveRecord::Schema.define(version: 20150828125947) do
 
   create_table "attachments", force: :cascade do |t|
     t.integer  "attachable_id"
@@ -75,13 +75,18 @@ ActiveRecord::Schema.define(version: 20150821131046) do
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id"
 
   create_table "replies", force: :cascade do |t|
-    t.text     "content",      limit: 1073741823
+    t.text     "content",                  limit: 1073741823
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "ticket_id"
     t.integer  "user_id"
     t.string   "message_id"
-    t.string   "content_type",                    default: "html"
+    t.string   "content_type",                                default: "html"
+    t.string   "raw_message_file_name"
+    t.string   "raw_message_content_type"
+    t.integer  "raw_message_file_size"
+    t.datetime "raw_message_updated_at"
+    t.boolean  "draft",                                       default: false,  null: false
   end
 
   add_index "replies", ["message_id"], name: "index_replies_on_message_id"
@@ -110,24 +115,31 @@ ActiveRecord::Schema.define(version: 20150821131046) do
   create_table "tenants", force: :cascade do |t|
     t.string   "domain"
     t.string   "from"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.string   "default_time_zone",        default: "Amsterdam"
+    t.boolean  "ignore_user_agent_locale", default: false,       null: false
+    t.string   "default_locale",           default: "en"
   end
 
   create_table "tickets", force: :cascade do |t|
     t.string   "subject"
-    t.text     "content",             limit: 1073741823
+    t.text     "content",                  limit: 1073741823
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "assignee_id"
     t.string   "message_id"
     t.integer  "user_id"
-    t.string   "content_type",                           default: "html"
-    t.integer  "status",                                 default: 0,      null: false
-    t.integer  "priority",                               default: 0,      null: false
+    t.string   "content_type",                                default: "html"
+    t.integer  "status",                                      default: 0,      null: false
+    t.integer  "priority",                                    default: 0,      null: false
     t.integer  "to_email_address_id"
     t.integer  "locked_by_id"
     t.datetime "locked_at"
+    t.string   "raw_message_file_name"
+    t.string   "raw_message_content_type"
+    t.integer  "raw_message_file_size"
+    t.datetime "raw_message_updated_at"
   end
 
   add_index "tickets", ["assignee_id"], name: "index_tickets_on_assignee_id"
@@ -141,8 +153,8 @@ ActiveRecord::Schema.define(version: 20150821131046) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "email",                  default: "",          null: false
-    t.string   "encrypted_password",     default: "",          null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -151,14 +163,14 @@ ActiveRecord::Schema.define(version: 20150821131046) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.boolean  "agent",                  default: false,       null: false
+    t.boolean  "agent",                  default: false, null: false
     t.text     "signature"
     t.boolean  "notify",                 default: true
     t.string   "authentication_token"
-    t.string   "time_zone",              default: "Amsterdam"
-    t.integer  "per_page",               default: 30,          null: false
+    t.string   "time_zone"
+    t.integer  "per_page",               default: 30,    null: false
     t.string   "locale"
-    t.boolean  "prefer_plain_text",      default: false,       null: false
+    t.boolean  "prefer_plain_text",      default: false, null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

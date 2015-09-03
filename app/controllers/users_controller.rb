@@ -18,8 +18,6 @@ class UsersController < ApplicationController
 
   load_and_authorize_resource :user
 
-  before_filter :load_locales, except: :index
-
   def edit
     @user = User.find(params[:id])
   end
@@ -39,7 +37,7 @@ class UsersController < ApplicationController
 
     if @user.update_attributes(user_params)
 
-      if current_user.agent?
+      if current_user.agent? && current_user.labelings.count == 0
         redirect_to users_url, notice: I18n::translate(:settings_saved)
       else
         redirect_to tickets_url, notice: I18n::translate(:settings_saved)
@@ -71,43 +69,31 @@ class UsersController < ApplicationController
 
   end
 
-  private
-    def load_locales
-      @time_zones = ActiveSupport::TimeZone.all.map(&:name).sort
-      @locales = []
+  protected
 
-      Dir.open("#{Rails.root}/config/locales").each do |file|
-        unless ['.', '..'].include?(file)
-          code = file[0...-4] # strip of .yml
-          @locales << [I18n.translate(:language_name, locale: code), code]
-        end
-      end
+  def user_params
+    attributes = params.require(:user).permit(
+        :email,
+        :password,
+        :password_confirmation,
+        :remember_me,
+        :signature,
+        :agent,
+        :notify,
+        :time_zone,
+        :locale,
+        :per_page,
+        :prefer_plain_text,
+        label_ids: []
+    )
+
+    # prevent normal user and limited agent from changing email and role
+    if !current_user.agent? || current_user.labelings.count > 0
+      attributes.delete(:email)
+      attributes.delete(:agent)
+      attributes.delete(:label_ids)
     end
 
-    def user_params
-      attributes = params.require(:user).permit(
-          :email,
-          :password,
-          :password_confirmation,
-          :remember_me,
-          :signature,
-          :agent,
-          :notify,
-          :time_zone,
-          :locale,
-          :per_page,
-          :prefer_plain_text,
-          label_ids: []
-      )
-
-      # prevent normal user and limited agent from changing email and role
-      if !current_user.agent? || current_user.labelings.count > 0
-        attributes.delete(:email)
-        attributes.delete(:agent)
-        attributes.delete(:label_ids)
-      end
-
-      return attributes
-    end
-
+    return attributes
+  end
 end

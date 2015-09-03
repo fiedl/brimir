@@ -20,10 +20,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Filter users by type and/or email.
 - Possible to inline-edit the label name.
 - Per user configuration option for plain text replies.
+- A global configuration page was added which can be used to set default locale and time zone.
+- Added "equal to" as option for rule matching.
+- Original email messages are now stored and available from the ticket detail page. This can be helpfull if Brimir fails to show some HTML mails correctly or to resolve possible bugs in Brimir.
+- Farsi/Persian translation contributed by @hadifarnoud.
 
 ### Changed
 - The outgoing email address of replies will now be the same as the original incoming email addresses when it was configured correctly as an outgoing email address. The agent can choose a different address when replying.
 - The `script/post-mail` script now returns correct exit codes to the local delivery command of Postfix. This allows Postfix to bounce an email when the ticket could not be created.
+- Ordering of tickets is now based on last modified time. Tickets with new replies will show up on top.
 
 ### Deprecated
 - Support for Ruby 1.9 has been dropped. We're not automatically testing it anymore.

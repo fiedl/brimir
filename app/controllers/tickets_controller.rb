@@ -29,12 +29,31 @@ class TicketsController < ApplicationController
   def show
     @agents = User.agents
 
-    @reply = @ticket.replies.new(user: current_user)
-    @reply.set_default_notifications!
+    draft = @ticket.replies.where(user: current_user).where(draft: true).first
+    if draft.present?
+      @reply = draft
+    else
+      @reply = @ticket.replies.new(user: current_user)
+      @reply.set_default_notifications!
+    end
 
     @labeling = Labeling.new(labelable: @ticket)
 
     @outgoing_addresses = EmailAddress.verified.ordered
+
+    respond_to do |format|
+      format.html
+      format.eml do
+        begin
+          send_file @ticket.raw_message.path(:original),
+              filename: "ticket-#{@ticket.id}.eml",
+              type: 'text/plain',
+              disposition: :attachment
+        rescue
+          raise ActiveRecord::RecordNotFound
+        end
+      end
+    end
   end
 
   def index
