@@ -17,14 +17,10 @@
 # replies to tickets, made by a user, possibly with attachments
 class Reply < ActiveRecord::Base
   include CreateFromUser
-  include RawMessage
-
-  has_many :attachments, as: :attachable, dependent: :destroy
+  include EmailMessage
 
   has_many :notifications, as: :notifiable, dependent: :destroy
   has_many :notified_users, source: :user, through: :notifications
-
-  accepts_nested_attributes_for :attachments
 
   validates :ticket_id, :content, presence: true
 
@@ -47,7 +43,22 @@ class Reply < ActiveRecord::Base
         .where('locked_by_id IN (?) OR locked_at < ?',
             [user.id, nil], Time.zone.now - 5.minutes)
   }
-
+  
+  def content_without_quotes
+    result = content
+      .gsub(/<style.*<\/style>/im, "")
+      .gsub(/<head.*<\/head>/im, "")
+      .gsub(/<blockquote.*<\/blockquote>/im, "")
+      .gsub(/----.*/m, "")
+    I18n.available_locales.each do |locale|
+      if (regex = I18n.translate(:on_date_author_wrote_regex, locale: locale)).present?
+        # for example: .gsub(/On .*wrote:.*/im, "")
+        result = result.gsub(/#{regex}/im, "")
+      end
+    end
+    return result
+  end
+  
   def set_default_notifications!
     users = users_to_notify.select do |user|
       Ability.new(user).can? :show, self

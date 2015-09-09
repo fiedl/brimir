@@ -107,6 +107,7 @@ en:
   attach_file: Attach file
   send_reply: Send reply
   on_date_author_wrote: 'On %{date}, %{author} wrote:'
+  on_date_author_wrote_regex: 'On .*wrote:.*'
   notification_will_be_sent_to: Your notification will be sent to
   save_as_draft: Save as draft
 
@@ -128,6 +129,9 @@ en:
 # notification_mailer/new_reply
   new_reply: New reply
   view_new_reply: View new reply
+  good_morning: Good morning
+  good_day: Good day
+  good_evening: Good evening
 
 # attachments/_attachment
   download: download
@@ -160,6 +164,7 @@ en:
 # settings/edit
   change_settings: Change settings
   localization_settings: Localization settings
+  reply_email_settings: Reply email settings
 
 # controllers/settings
   settings_saved: Settings saved
@@ -279,3 +284,6 @@ en:
         default_locale: Default language
         ignore_user_agent_locale: Ignore preferred browser language
         default_time_zone: Default time zone
+        include_conversation_in_replies: Include conversation in reply emails
+        logo_url: Logo url
+        reply_email_footer: Reply email footer

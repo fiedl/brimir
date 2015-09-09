@@ -37,6 +37,21 @@ class RepliesController < ApplicationController
     save_reply_and_redirect
   end
 
+  def show
+    respond_to do |format|
+      format.eml do
+        begin
+          send_file @reply.raw_message.path(:original),
+              filename: "reply-#{@reply.id}.eml",
+              type: 'text/plain',
+              disposition: :attachment
+        rescue
+          raise ActiveRecord::RecordNotFound
+        end
+      end
+    end
+  end
+
   protected
 
   def save_reply_and_redirect
@@ -55,7 +70,30 @@ class RepliesController < ApplicationController
           @reply.save!
 
           @reply.notified_users.each do |user|
-            mail = NotificationMailer.new_reply(@reply, user)
+            mail = if Tenant.current_tenant.include_conversation_in_replies?
+              @ticket = @reply.ticket
+              @replies = @reply.ticket.replies.reverse.select do |reply| 
+                # Here, we have to decide which replies to include in the conversation
+                # that is sent to the client.
+                # 
+                #   1. Do not include internal notes without recipient.
+                #   2. Do not include internal questions to other agents.
+                #   3. Do not include internal response from other agents.
+                #   4. Include all replies that have the user as recipient.
+                #   5. Include all external replies from the user.
+                #   6. Incldue all external replies from other users, since
+                #       a. clients tend to reply from different email addresses, and
+                #       b. we often need confirmations from other external staff like
+                #            "I confirm that you may grant this person admin permissions."
+                #
+                reply.notified_users.include?(user) or  # 1., 2., 3., 4.
+                reply.user == user or                   # 1., 2., 3.,     5.
+                !reply.user.agent?                      # 1., 2., 3.,         6.
+              end
+              NotificationMailer.new_reply_with_conversation(@replies, @ticket, user)
+            else
+              NotificationMailer.new_reply(@reply, user)
+            end
 
             mail.deliver_now unless EmailAddress.pluck(:email).include?(user.email)
             @reply.message_id = mail.message_id
@@ -74,23 +112,6 @@ class RepliesController < ApplicationController
       render action: 'new'
     end
   end
-
-  def show
-    respond_to do |format|
-      format.eml do
-        begin
-          send_file @reply.raw_message.path(:original),
-              filename: "reply-#{@reply.id}.eml",
-              type: 'text/plain',
-              disposition: :attachment
-        rescue
-          raise ActiveRecord::RecordNotFound
-        end
-      end
-    end
-  end
-
-  protected
 
   def reply_params
     attributes = params.require(:reply).permit(
