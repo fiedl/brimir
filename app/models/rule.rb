@@ -30,16 +30,16 @@ class Rule < ActiveRecord::Base
     end
 
     if filter_operation == 'contains'
-      value.include?(filter_value)
+      value.downcase.include?(filter_value.downcase)
     elsif filter_operation == 'equals'
-      value == filter_value
+      value.downcase == filter_value.downcase
     end
   end
 
   def execute(ticket)
     if action_operation == 'assign_label'
       label = Label.where(name: action_value).first_or_create
-      ticket.labels << label
+      ticket.labels << label unless ticket.labels.include?(label)
 
     elsif action_operation == 'notify_user'
       user = User.where(email: action_value).first

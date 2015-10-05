@@ -145,6 +145,7 @@ en:
   omniauth_connect_title: Authentication using Google
   omniauth_connect_text: Activate authentication using a Google Account. Afterwards you can use "Sign in with Google" as an alternative to the default email address and password login.
   omniauth_connect_google_text: Connect with Google
+  remove_user: Remove user
 
 # users/index
   email: Email
@@ -165,6 +166,7 @@ en:
 # settings/edit
   change_settings: Change settings
   localization_settings: Localization settings
+  permissions: Permissions
   reply_email_settings: Reply email settings
 
 # controllers/settings
@@ -176,6 +178,7 @@ en:
 # controllers/users
   settings_saved: Settings saved
   user_added: User added
+  user_removed: Gebruiker removed
 
 # controllers/tickets
   ticket_added: Ticket added
@@ -285,6 +288,7 @@ en:
         default_locale: Default language
         ignore_user_agent_locale: Ignore preferred browser language
         default_time_zone: Default time zone
+        share_drafts: Share drafts with other agents
         include_conversation_in_replies: Include conversation in reply emails
         logo_url: Logo url
         reply_email_footer: Reply email footer
