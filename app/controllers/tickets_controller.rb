@@ -147,6 +147,9 @@ class TicketsController < ApplicationController
     else
       @ticket = Ticket.new(ticket_params)
     end
+    
+    # Fiedl: Quick fix since the content type isn't always detected correctly.
+    @ticket.content_type = 'html' if @ticket.content.include?("<p>") or @ticket.content.include?("<html>")
 
     if !@ticket.nil? && @ticket.save
       NotificationMailer.incoming_message(@ticket, params[:message])
