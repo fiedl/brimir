@@ -78,7 +78,7 @@ class NotificationMailer < ActionMailer::Base
     end
 
     @ticket = ticket
-    @replies = replies
+    @replies = replies.reverse
     @user = user
     @title = title
 
