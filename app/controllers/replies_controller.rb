@@ -72,7 +72,7 @@ class RepliesController < ApplicationController
           @reply.notified_users.each do |user|
             mail = if Tenant.current_tenant.include_conversation_in_replies?
               @ticket = @reply.ticket
-              @replies = @reply.ticket.replies.reverse.select do |reply| 
+              @replies = @reply.ticket.replies.order(:created_at).select do |reply| 
                 # Here, we have to decide which replies to include in the conversation
                 # that is sent to the client.
                 # 
