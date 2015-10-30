@@ -93,7 +93,7 @@ class RepliesController < ApplicationController
                 reply.user == user or                   # 1., 2., 3.,     5.
                 !reply.user.agent?                      # 1., 2., 3.,         6.
               end
-              NotificationMailer.new_reply_with_conversation(@replies, @ticket, user)
+              NotificationMailer.new_reply_with_conversation(@reply, @replies, @ticket, user)
             else
               NotificationMailer.new_reply(@reply, user)
             end
