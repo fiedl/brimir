@@ -34,14 +34,16 @@
         if reply_to.nil?
           reply_to = @reply.ticket
         end
-
-        content += t(:on_date_author_wrote, author: reply_to.user.email,
-            date: l(reply_to.created_at.in_time_zone(current_user.time_zone), format: :long))
-
-        if current_user.prefer_plain_text?
-          content += "\n#{wrap_and_quote(reply_to.content)}"
-        else
-          content += "<br />#{text_to_html(wrap_and_quote(reply_to.content))}"
+        
+        unless Tenant.current_tenant.include_conversation_in_replies?
+          content += t(:on_date_author_wrote, author: reply_to.user.email,
+              date: l(reply_to.created_at.in_time_zone(current_user.time_zone), format: :long))
+          
+          if current_user.prefer_plain_text?
+            content += "\n#{wrap_and_quote(reply_to.content)}"
+          else
+            content += "<br />#{text_to_html(wrap_and_quote(reply_to.content))}"
+          end
         end
       %>
 

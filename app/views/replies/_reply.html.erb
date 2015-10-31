@@ -24,7 +24,7 @@
         <% end %>
 
         <% if reply.content_type == 'html' %>
-          <%= sanitize_html(reply.content, reply.inline_files) %>
+          <%= handle_quotation_collapse(sanitize_html(reply.content, reply.inline_files)).html_safe %>
         <% else %>
           <pre><%= reply.content %></pre>
         <% end %>

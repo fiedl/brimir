@@ -18,6 +18,7 @@ class NotificationMailer < ActionMailer::Base
 
   add_template_helper HtmlTextHelper
   add_template_helper AvatarHelper
+  add_template_helper QuotationCollapseHelper
 
   def new_ticket(ticket, user)
     unless user.locale.blank?
