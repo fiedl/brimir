@@ -84,6 +84,7 @@ en:
   no_notifications_sent: 'No notifications have been sent'
   assign_label: Assign label
   take_ticket_lock_from_user: Take ticket handling from %{user}
+  toggle_collapsed_content: Toggle collapsed content
 
 # tickets/_change_priority_form
   change: Change

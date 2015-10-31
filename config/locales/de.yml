@@ -83,6 +83,7 @@ de:
   notification_sent_to: 'Es wurde eine Benachrichtigung an folgende E-Mail-Adressen gesendet:'
   no_notifications_sent: 'Es wurde keine Benachrichtigung gesendet.'
   assign_label: Label zuweisen
+  toggle_collapsed_content: Ausgeblendeter Inhalt
 
 # tickets/_change_priority_form
   change: Priorität setzen
@@ -104,7 +105,7 @@ de:
   attach_file: Datei anhängen
   send_reply: Anwort senden
   on_date_author_wrote: 'Am %{date} hat %{author} folgendes geschrieben:'
-  on_date_author_wrote_regex: 'Am [0-9].*geschrieben:.*|Am [0-9].*schrieb.*:.*|Von:.*\@.*'
+  on_date_author_wrote_regex: 'Am .* hat .* geschrieben:.*|Am .* schrieb.*:.*|Von:.*\@.*'
   notification_will_be_sent_to: 'Es wird eine Benachrichtung an folgende Adresse gesendet:'
 
 # ticket_mailer/notify_assigned.text.erb

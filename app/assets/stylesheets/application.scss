@@ -168,3 +168,15 @@ ul.off-canvas-list form button:hover {
 pre {
 	overflow-x: auto;
 }
+
+input.hidden-collapse-checkbox:not(:checked) + span .collapsed-quote-content {
+  display: none;
+}
+
+input.hidden-collapse-checkbox:checked + span .collapsed-quote-content {
+  display: block;
+}
+
+.hidden-collapse-checkbox {
+  display: none;
+}
