@@ -57,6 +57,7 @@ class RepliesController < ApplicationController
       @reply.user_id = nil
     else
       @reply.user_id = current_user.id
+      @reply.created_at = Time.now
     end
     begin
       if @reply.draft?
@@ -126,6 +127,8 @@ class RepliesController < ApplicationController
         :draft,
         notified_user_ids: [],
         attachments_attributes: [
+          :id,
+          :_destroy,
           :file
         ],
         ticket_attributes: [

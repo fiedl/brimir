@@ -21,10 +21,9 @@ class TicketsController < ApplicationController
   before_filter :authenticate_user!, except: [:create, :new]
   load_and_authorize_resource :ticket, except: :create
   skip_authorization_check only: :create
-  skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
 
-  # this is needed for brimir integration in other sites
-  before_filter :allow_cors, only: [:create, :new]
+  # allow ticket creation using json posts
+  skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
 
   def show
     @agents = User.agents
@@ -125,9 +124,9 @@ class TicketsController < ApplicationController
   def new
     unless current_user.blank?
       if current_user.prefer_plain_text?
-        #signature = { content: "\n#{html_to_text current_user.signature}" }
+        signature = { content: "\n#{html_to_text current_user.signature}" }
       else
-        #signature = { content: "<p></p>#{current_user.signature}" }
+        signature = { content: "<p></p>#{current_user.signature}" }
       end
     else
       signature = {}
@@ -142,6 +141,8 @@ class TicketsController < ApplicationController
     unless current_user.nil?
       @ticket.user = current_user
     end
+
+    @email_addresses = EmailAddress.verified.ordered
   end
 
   def create
@@ -185,16 +186,13 @@ class TicketsController < ApplicationController
         if !@ticket.nil? && @ticket.valid?
 
           if current_user.nil?
-            if request.xhr?
-              return render I18n.translate(:ticket_added)
-            else
-              render 'create'
-            end
+            render 'create'
           else
             redirect_to ticket_url(@ticket), notice: I18n::translate(:ticket_added)
           end
 
         else
+          @email_addresses = EmailAddress.verified.ordered
           render 'new'
         end
 
@@ -219,6 +217,7 @@ class TicketsController < ApplicationController
       if !current_user.nil? && current_user.agent?
         params.require(:ticket).permit(
             :from,
+            :to_email_address_id,
             :content,
             :subject,
             :status,
@@ -241,14 +240,4 @@ class TicketsController < ApplicationController
             ])
       end
     end
-
-    def allow_cors
-      headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'GET,POST'
-      headers['Access-Control-Allow-Headers'] =
-          %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
-
-      head :ok if request.request_method == 'OPTIONS'
-    end
-
 end
