@@ -2,14 +2,30 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Brimir unreleased.unreleased.unreleased (to be announced)
+## Brimir unreleased (to be announced)
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## Brimir 0.6.3 (2015-11-06)
 ### Added
 - Incoming email address selection on new ticket screen. Allowing rules to be applied for manually created tickets.
+- To/cc address now becomes visible as notified users for all incoming mails.
+- User preference to disable quoting of original message in the reply form.
 
 ### Changed
 - Signatures are added to new tickets again.
-
-### Deprecated
+- Realigned sign in view.
+- Customers can only see replies they were notified of, allowing replies to be used as internal communication between agents.
+- Reply notifications are now sent to the same users as the last reply by default.
 
 ### Removed
 - The undocumented Brimir plugin to embed a new ticket form was removed.
@@ -17,8 +33,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Ordering of replies is now always chronologically, even when drafts were saved.
 - Attachments saved with a draft will not cause problems anymore.
-
-### Security
+- Non-multi part HTML mails are now correctly recognized.
+- Outgoing plain text notifications are now wrapped at 72 characters as well.
 
 ## Brimir 0.6.2 (2015-10-23)
 ### Changed

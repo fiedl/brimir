@@ -33,10 +33,15 @@ class TicketsController < ApplicationController
         .where(draft: true)
         .first
 
+    @replies = @ticket.replies.chronologically.without_drafts.select do |reply|
+      can? :show, reply
+    end
+
     if draft.present?
       @reply = draft
     else
       @reply = @ticket.replies.new(user: current_user)
+      @reply.reply_to = @replies.last || @ticket
       @reply.set_default_notifications!
     end
 
@@ -122,21 +127,7 @@ class TicketsController < ApplicationController
   end
 
   def new
-    unless current_user.blank?
-      if current_user.prefer_plain_text?
-        signature = { content: "\n#{html_to_text current_user.signature}" }
-      else
-        signature = { content: "<p></p>#{current_user.signature}" }
-      end
-    else
-      signature = {}
-    end
-
-    unless params[:ticket].nil? # prefill params given?
-      @ticket = Ticket.new(signature.merge(ticket_params))
-    else
-      @ticket = Ticket.new(signature)
-    end
+    @ticket = Ticket.new
 
     unless current_user.nil?
       @ticket.user = current_user
@@ -156,28 +147,7 @@ class TicketsController < ApplicationController
     @ticket.content_type = 'html' if @ticket.content.include?("<p>") or @ticket.content.include?("<html>")
 
     if !@ticket.nil? && @ticket.save
-
-      Rule.apply_all(@ticket) unless @ticket.is_a?(Reply)
-
-      # where user notifications added?
-      if @ticket.notified_users.count == 0
-        @ticket.set_default_notifications!
-      end
-
-      # @ticket might be a Reply when via json post
-      if @ticket.is_a?(Ticket)
-        if @ticket.assignee.nil?
-          @ticket.notified_users.each do |user|
-            mail = NotificationMailer.new_ticket(@ticket, user)
-            mail.deliver_now unless EmailAddress.pluck(:email).include?(user.email)
-            @ticket.message_id = mail.message_id
-          end
-
-          @ticket.save
-        else
-          NotificationMailer.assigned(@ticket).deliver_now
-        end
-      end
+      NotificationMailer.incoming_message(@ticket, params[:message])
     end
 
     respond_to do |format|
