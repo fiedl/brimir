@@ -112,6 +112,7 @@ nl:
   on_date_author_wrote_regex: 'Op .*schreef.*:.*'
   notification_will_be_sent_to: Een notificatie van je reactie wordt verstuurd naar
   save_as_draft: Als concept opslaan
+  internal_note: Interne reactie
 
 # replies/_reply
   reply_by: Reactie door

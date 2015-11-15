@@ -169,6 +169,10 @@ pre {
 	overflow-x: auto;
 }
 
+.internal-reply li > a, .internal-reply .row {
+	background-color: #fff6d9 !important;
+}
+
 input.hidden-collapse-checkbox:not(:checked) + span .collapsed-quote-content {
   display: none;
 }

@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Brimir unreleased (to be announced)
 ### Added
+- Automatic refresh of inbox when browser tab receives focus again.
+- Internal notes can now be added to tickets.
 
 ### Changed
 
@@ -12,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 ### Fixed
+- Ticket detail pages of tickets with draft replies could generate errors after saving a draft.
 
 ### Security
 
