@@ -39,7 +39,10 @@ class SettingsController < ApplicationController
       :default_time_zone,
       :ignore_user_agent_locale,
       :default_locale,
-      :share_drafts
+      :share_drafts,
+      :include_conversation_in_replies,
+      :reply_email_footer,
+      :logo_url
     )
   end
 end
