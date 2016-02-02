@@ -58,7 +58,7 @@ gem 'will_paginate'
 gem 'paperclip'
 
 # select2 replacement for selectboxes
-gem 'select2-rails'
+gem 'select2-rails', '~> 3.5'
 
 gem 'font-awesome-rails', '~> 4.0'
 
@@ -83,3 +83,6 @@ gem 'fancybox2-rails', '~> 0.2.8'
 
 # gravatar for user avatar images
 gem 'gravatar_image_tag'
+
+# pry for debugging
+gem 'pry'
