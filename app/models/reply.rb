@@ -46,7 +46,7 @@ class Reply < ActiveRecord::Base
         .where('locked_by_id IN (?) OR locked_at < ?',
             [user.id, nil], Time.zone.now - 5.minutes)
   }
-
+  
   def set_default_notifications!
     unless reply_to_type.nil?
       self.notified_users =
