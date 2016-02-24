@@ -22,16 +22,17 @@ module QuotationCollapseHelper
     result = result
       .gsub(/<style.*<\/style>/im, "")
       .gsub(/<head.*<\/head>/im, "")
+      .gsub(/&lt;!--[^<>]*--&gt;/im, "")
 
     # 2. Detect common ways that lead in email quotes or signatures.
     #    http://stackoverflow.com/a/2193937/2066546
     #
-    result = collapse_regex(/<blockquote.*<\/blockquote>/im, result)
     result = collapse_regex(/----.*/m, result)
     result = collapse_regex(/-----Original Message-----.*/im, result)
     result = collapse_regex(/Sent from my iPhone*/im, result)
     result = collapse_regex(/Sent from my BlackBerry*/im, result)
     result = collapse_regex(/________________________________*/im, result)
+    result = collapse_regex(/<blockquote.*<\/blockquote>/im, result)
     
     # 3. Detect phrases that are stored in the i18n definitions
     #    like "On September 09, 2015 08:24, foo@example.com wrote:"
@@ -54,7 +55,7 @@ module QuotationCollapseHelper
     
     # 4. Detect our own conversation emails.
     #
-    result = collapse_regex(/<div style="font-family: Helvetica; background-color: #F0F0F0;">*/im, result)
+    result = collapse_regex(/<div style="font-family: Helvetica; background-color: [^\s]*;">.*/im, result)
     
     return result
   end
@@ -64,7 +65,7 @@ module QuotationCollapseHelper
       content
     else
       content.gsub(regex) do |whole_quotation|
-        if Regexp.last_match[2]
+        if Regexp.last_match && Regexp.last_match[2]
           content_before_quote = Regexp.last_match[1]
           quote = Regexp.last_match[2]
           content_after_quote = Regexp.last_match[3] || ""
