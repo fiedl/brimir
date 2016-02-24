@@ -110,7 +110,7 @@
 
           <div class="output">
             <% if @ticket.content_type == 'html' %>
-              <%= sanitize_html(@ticket.content, @ticket.inline_files) %>
+              <%= handle_quotation_collapse(sanitize_html(@ticket.content, @ticket.inline_files)).html_safe %>
             <% else %>
               <pre><%= word_wrap(@ticket.content, line_width: 72) %></pre>
             <% end %>
