@@ -18,6 +18,7 @@ class Ticket < ActiveRecord::Base
   include CreateFromUser
   include EmailMessage
   include TicketMerge
+  include TicketNotifications
 
   validates_presence_of :user_id
 
@@ -29,9 +30,6 @@ class Ticket < ActiveRecord::Base
   has_many :replies, dependent: :destroy
   has_many :labelings, as: :labelable, dependent: :destroy
   has_many :labels, through: :labelings
-
-  has_many :notifications, as: :notifiable, dependent: :destroy
-  has_many :notified_users, source: :user, through: :notifications
 
   has_many :status_changes, dependent: :destroy
 
@@ -116,13 +114,6 @@ class Ticket < ActiveRecord::Base
   scope :unlocked_for, ->(user) {
     where('locked_by_id IN (?) OR locked_at < ?', [user.id, nil], Time.zone.now - 5.minutes)
   }
-
-  def set_default_notifications!
-    users = User.agents_to_notify.select do |user|
-      Ability.new(user).can? :show, self
-    end
-    self.notified_user_ids = users.map(&:id)
-  end
 
   def status_times
     total = {}

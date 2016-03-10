@@ -28,14 +28,7 @@
         </div>
       <% end %>
 
-      <div class="row collapse mbl">
-        <div class="medium-4 columns">
-          <label><%= t(:notification_will_be_sent_to) %></label>
-        </div>
-        <div class="medium-8 columns">
-          <%= render 'replies/notified_users', r: r %>
-        </div>
-      </div>
+      <%= render 'replies/notified_users', r: r %>
 
       <%
         if @reply.content.blank?

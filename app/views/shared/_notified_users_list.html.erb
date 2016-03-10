@@ -1,0 +1,34 @@
+<ul class="inline-list text-secondary no-mb">
+  <% if reply.notified_users.count > 0 %>
+    <li><%= t(:notification_sent_to) %></li>
+
+    <li><strong><%= "#{t('activerecord.attributes.reply.to')}:" %></strong></li>
+    <% reply.notifications.to.users.each do |user| %>
+      <li><%= link_to(user.email, user_tickets_path(user_id: user.id)) %></li>
+    <% end %>
+
+    <% if reply.notified_users_via_cc.any? %>
+      <li><strong><%= "#{t('activerecord.attributes.reply.cc')}:" %></strong></li>
+      <% reply.notifications.cc.users.each do |user| %>
+        <li><%= link_to(user.email, user_tickets_path(user_id: user.id)) %></li>
+      <% end %>
+    <% end %>
+
+    <% if reply.notified_users_via_bcc.any? %>
+      <li><strong><%= "#{t('activerecord.attributes.reply.bcc')}:" %></strong></li>
+      <% reply.notifications.bcc.users.each do |user| %>
+        <li><%= link_to(user.email, user_tickets_path(user_id: user.id)) %></li>
+      <% end %>
+    <% end %>
+
+    <% if reply.notified_users_via_agent_notification.any? %>
+      <li><strong><%= "#{t('activerecord.attributes.reply.notified_agents')}:" %></strong></li>
+      <% reply.notifications.agent_notification.users.each do |user| %>
+        <li><%= link_to(user.email, user_tickets_path(user_id: user.id)) %></li>
+      <% end %>
+    <% end %>
+
+  <% else %>
+    <li class="no-ml"><%= t(:no_notifications_sent) %></li>
+  <% end %>
+</ul>

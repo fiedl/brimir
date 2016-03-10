@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
   has_many :labels, through: :labelings
   has_many :assigned_tickets, class_name: 'Ticket',
       foreign_key: 'assignee_id', dependent: :nullify
+      
+  has_many :notifications
 
   # identities for omniauth
   has_many :identities
@@ -75,6 +77,14 @@ class User < ActiveRecord::Base
   def self.agents_to_notify
     User.agents
         .where(notify: true)
+  end
+  
+  def self.ticket_system_addresses
+    User.where(email: EmailAddress.pluck(:email))
+  end
+  
+  def ticket_system_address?
+    User.ticket_system_addresses.pluck(:id).include? self.id
   end
 
   def default_localization

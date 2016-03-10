@@ -65,7 +65,8 @@ class RepliesControllerTest < ActionController::TestCase
     assert_match "\n\nthis is in bold\n", mail.text_part.body.decoded
 
     # correctly addressed
-    assert_equal [User.agents.last.email], mail.to
+    assert_equal User.agents.pluck(:email), mail.to
+    assert_equal User.agents.last.email, mail.header_fields.select { |field| field.name == 'smtp-envelope-to' }.last.value
 
     # correct content type
     assert_match 'multipart/alternative', mail.content_type
@@ -106,7 +107,9 @@ class RepliesControllerTest < ActionController::TestCase
       }
     end
     mail = ActionMailer::Base.deliveries.last
-    assert_equal [users(:alice).email], mail.to
+    assert_equal [users(:bob).email, users(:alice).email], mail.to
+    assert_equal mail.header_fields.select { |field| field.name == 'smtp-envelope-to' }.count, 1
+    assert_equal mail.header_fields.select { |field| field.name == 'smtp-envelope-to' }.last.value, users(:alice).email
   end
 
   test 'should re-open ticket' do

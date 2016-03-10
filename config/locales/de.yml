@@ -114,6 +114,9 @@ de:
   on_date_author_wrote: 'Am %{date} hat %{author} folgendes geschrieben:'
   on_date_author_wrote_regex: 'Am .* hat .* geschrieben:.*|Am .* schrieb.*:.*|Am .* schrieb:.*|Von:.*\@.*'
   notification_will_be_sent_to: 'Es wird eine Benachrichtung an folgende Adresse gesendet:'
+  notifications: 'Benachrichtigungen'
+  save_as_draft: Als Entwurf speichern
+  internal_note: Interne Notiz
 
 # ticket_mailer/notify_assigned.text.erb
   ticket_assigned: Ihnen wurde ein Ticket zugewiesen
@@ -268,6 +271,13 @@ de:
           waiting: Ausstehend
         priority: Priorität
         assignee_id: Bearbeiter
+
+      reply:
+        from: Von E-Mail-Adresse
+        to: An
+        cc: CC
+        bcc: BCC
+        notified_agents: Benachrichtigte Agenten
 
       rule:
         filter_field: Feld

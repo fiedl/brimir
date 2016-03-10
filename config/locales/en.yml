@@ -117,9 +117,10 @@ en:
   on_date_author_wrote: 'On %{date}, %{author} wrote:'
   on_date_author_wrote_regex: 'On .*wrote:.*|From:.*\@.*'
   notification_will_be_sent_to: Your notification will be sent to
+  notifications: 'Notifications'
   save_as_draft: Save as draft
   internal_note: Internal note
-
+  
 # replies/_reply
   reply_by: Reply by
 
@@ -270,6 +271,10 @@ en:
 
       reply:
         from: From email address
+        to: To
+        cc: CC
+        bcc: BCC
+        notified_agents: Notified agents
 
       rule:
         filter_field: Field

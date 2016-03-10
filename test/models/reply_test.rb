@@ -25,7 +25,41 @@ class ReplyTest < ActiveSupport::TestCase
     reply = ticket.replies.new
     reply.set_default_notifications!
 
-    assert reply.notified_users.include?(users(:dave))
+    assert reply.notified_users_via_agent_notification.include?(users(:dave))
+  end
+  
+  test 'should not notify other clients when one of the clients replies' do
+    #
+    # Suppose, several clients are part of a conversation. Now, one of the
+    # clients replies to something an agent wrote and only answers to the
+    # email address of the ticket system, e.g. support@example.com.
+    #
+    # The other clients that are part of this conversation should not be
+    # notified, since the sender can't see that they would receive this
+    # email.
+    #
+    # See also: https://github.com/ivaldi/brimir/issues/259
+    #
+    agent = User.create! email: 'agent@example.com', agent: true
+    client1 = User.create! email: 'client1@example.com'
+    client2 = User.create! email: 'client2@example.com'
+    
+    ticket = Ticket.create from: 'client1@example.com', content: 'This is my problem'
+    reply_of_the_agent = ticket.replies.create! content: 'This might be the solution.', user: agent
+    reply_of_the_agent.notified_users << client1
+    reply_of_the_agent.notified_users_via_bcc << client2
+    
+    reply_of_client1 = ticket.replies.create! content: 'It did not work.', user: client1
+    reply_of_client1.reply_to = reply_of_the_agent
+    reply_of_client1.notified_users
+    reply_of_client1.set_default_notifications!
+    
+    reply_of_client2 = ticket.replies.create! content: 'client1 is stupid! Did he even start his computer?', user: client2
+    reply_of_client2.reply_to = reply_of_the_agent
+    reply_of_client2.set_default_notifications!
+    
+    assert reply_of_client2.notified_users.include?(agent)
+    assert not(reply_of_client2.notified_users.include?(client1))
   end
 
 end

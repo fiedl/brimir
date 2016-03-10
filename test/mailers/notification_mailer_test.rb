@@ -32,6 +32,7 @@ class NotificationMailerTest < ActionMailer::TestCase
 
   test 'should notify user of new reply' do
     reply = replies(:solution)
+    reply.notified_users << User.last
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
       NotificationMailer.new_reply(reply, User.last).deliver_now
@@ -48,7 +49,7 @@ class NotificationMailerTest < ActionMailer::TestCase
     reply = replies(:solution)
     our_email = email_addresses(:support)
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
-      NotificationMailer.new_reply(reply, User.new(email: our_email.email)).deliver_now
+      NotificationMailer.new_reply(reply, User.create!(email: our_email.email)).deliver_now
     end
   end
 
