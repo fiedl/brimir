@@ -41,6 +41,12 @@ class NotificationMailer < ActionMailer::Base
   end
 
   def new_reply(reply, user)
+    return if user.ticket_system_address?
+    
+    if Tenant.current_tenant.include_conversation_in_replies?
+      return new_reply_with_conversation(reply, user)
+    end
+    
     unless user.locale.blank?
       @locale = user.locale
     else
@@ -62,7 +68,12 @@ class NotificationMailer < ActionMailer::Base
     mail(to: user.email, subject: title, from: reply.ticket.reply_from_address)
   end
   
-  def new_reply_with_conversation(reply, replies, ticket, user)
+  def new_reply_with_conversation(reply, user)
+    return if user.ticket_system_address?
+    
+    replies = reply.ticket.replies.order(:created_at).select { |r| Ability.new(user).can? :read, r }
+    ticket = reply.ticket
+        
     unless user.locale.blank?
       @locale = user.locale
     else
