@@ -156,30 +156,6 @@ class NotificationMailer < ActionMailer::Base
     end
   end
   
-  def new_reply_with_conversation(reply, replies, ticket, user)
-    unless user.locale.blank?
-      @locale = user.locale
-    else
-      @locale = Rails.configuration.i18n.default_locale
-    end
-    title = I18n::translate(:new_reply, locale: @locale) + ': ' + reply.ticket.subject
-
-    add_attachments(reply)
-    add_reference_message_ids(reply)
-    add_in_reply_to_message_id(reply)
-
-    unless reply.message_id.blank?
-      headers['Message-ID'] = "<#{reply.message_id}>"
-    end
-
-    @ticket = ticket
-    @replies = replies.reverse
-    @user = user
-    @title = title
-
-    mail(to: user.email, subject: title, from: reply.ticket.reply_from_address)
-  end
-
   def status_changed(ticket)
     @ticket = ticket
 
