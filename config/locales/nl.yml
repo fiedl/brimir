@@ -170,6 +170,7 @@ nl:
   localization_settings: Localizatie instellingen
   permissions: Rechten
   reply_email_settings: Reactie E-mailinstellingen
+  notification_settings: Notificatie instellingen
 
 # controllers/settings
   settings_saved: Instellingen opgeslagen
@@ -288,3 +289,4 @@ nl:
         ignore_user_agent_locale: Negeer voorkeur taal van browser
         default_time_zone: Standaard tijdzone
         share_drafts: Deel concepten met andere medewerkers
+        first_reply_ignores_notified_agents: Geen notificatie van eerste reactie aan andere agents voor toegewezen tickets

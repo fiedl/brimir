@@ -19,7 +19,12 @@ class Api::V1::TicketsController < Api::V1::ApplicationController
   load_and_authorize_resource :ticket
 
   def index
-    @tickets = Ticket.by_status(:open).viewable_by(current_user)
+    if current_user.agent && params.has_key?(:user_email)
+      user= User.find_by( email: Base64.urlsafe_decode64(params[:user_email]) )
+      @tickets = Ticket.by_status(:open).viewable_by(user)
+    else
+      @tickets = Ticket.by_status(:open).viewable_by(current_user)
+    end
   end
 
   def show

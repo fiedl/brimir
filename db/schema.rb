@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151113142834) do
+ActiveRecord::Schema.define(version: 20160310134243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,7 +129,10 @@ ActiveRecord::Schema.define(version: 20151113142834) do
     t.string   "logo_url"
     t.text     "reply_email_footer"
     t.boolean  "share_drafts",                    default: false
+    t.boolean  "first_reply_ignores_notified_agents", default: false,       null: false
   end
+
+  add_index "tenants", ["domain"], name: "index_tenants_on_domain", unique: true
 
   create_table "tickets", force: :cascade do |t|
     t.string   "subject"
