@@ -23,20 +23,8 @@ class NotificationMailer < ActionMailer::Base
   def self.incoming_message(ticket_or_reply, original_message)
     if ticket_or_reply.is_a? Reply
       reply = ticket_or_reply
-      reply.set_default_notifications!
-
-      message_id = nil
-
-      reply.notified_users.each do |user|
-        message = NotificationMailer.new_reply(reply, user)
-        message.message_id = message_id
-        message.deliver_now
-
-        reply.message_id = message.message_id
-        message_id = message.message_id
-      end
-
-      reply.save
+      reply.set_default_notifications!(original_message)
+      reply.notify_users
     else
       ticket = ticket_or_reply
 
@@ -120,7 +108,11 @@ class NotificationMailer < ActionMailer::Base
     @reply = reply
     @user = user
     return if EmailAddress.pluck(:email).include?(user.email.to_s)
-    mail(to: user.email, subject: title, from: reply.ticket.reply_from_address)
+    
+    displayed_to_field = reply.notified_users.where(agent: false).pluck(:email)
+    displayed_to_field = user.email if displayed_to_field.empty?
+    mail(smtp_envelope_to: user.email, to: displayed_to_field,
+      subject: title, from: reply.ticket.reply_from_address)
   end
   
   def new_reply_with_conversation(reply, replies, ticket, user)
