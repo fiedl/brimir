@@ -64,7 +64,7 @@ class RepliesController < ApplicationController
       @reply.user_id = current_user.id
       @reply.created_at = Time.now
     end
-    begin
+    #begin
       if @reply.draft?
         original_updated_at = @reply.ticket.updated_at
 
@@ -82,13 +82,17 @@ class RepliesController < ApplicationController
 
         redirect_to @reply.ticket, notice: I18n::translate(:reply_added)
       end
-    rescue => e
-      Rails.logger.error 'Exception occured on Reply transaction!'
-      Rails.logger.error "Message: #{e.message}"
-      Rails.logger.error "Backtrace: #{e.backtrace.join("\n")}"
-      @outgoing_addresses = EmailAddress.verified.ordered
-      render action: 'new'
-    end
+    #rescue => e
+    #  Rails.logger.error 'Exception occured on Reply transaction!'
+    #  Rails.logger.error "Message: #{e.message}"
+    #  Rails.logger.error "Backtrace: #{e.backtrace.join("\n")}"
+    #  @outgoing_addresses = EmailAddress.verified.ordered
+    #  render action: 'new'
+    #end
+    #
+    # # The above raises: An ActionView::MissingTemplate occurred in replies#create:
+    # # Missing template replies/new
+    #
   end
 
   def reply_params
