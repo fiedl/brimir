@@ -144,10 +144,16 @@ class NotificationMailer < ActionMailer::Base
 
     @ticket = ticket
     @replies = replies.reverse
+    @reply = reply
     @user = user
     @title = title
 
-    mail(to: user.email, subject: title, from: reply.ticket.reply_from_address)
+    displayed_to_field = reply.notified_users.where(agent: false).pluck(:email)
+    displayed_to_field = user.email if displayed_to_field.empty?
+    mail(smtp_envelope_to: user.email, to: displayed_to_field,
+        subject: title, from: reply.ticket.reply_from_address) do |format|
+      format.html { render 'new_reply_with_conversation' }  
+    end
   end
 
   def status_changed(ticket)
