@@ -106,7 +106,7 @@ class RepliesControllerTest < ActionController::TestCase
       }
     end
     mail = ActionMailer::Base.deliveries.last
-    assert_equal [users(:alice).email], mail.to
+    assert_equal users(:alice).email, mail.header_fields.select { |field| field.name == 'smtp-envelope-to' }.last.value
   end
 
   test 'should re-open ticket' do
@@ -126,6 +126,7 @@ class RepliesControllerTest < ActionController::TestCase
     @reply.raw_message = fixture_file_upload('ticket_mailer/simple')
     @reply.save!
 
+    @reply.reload
     get :show, id: @reply.id, format: :eml
     assert_response :success
   end

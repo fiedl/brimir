@@ -106,6 +106,12 @@ en:
   merge_explanation: "Merge the selected tickets. This copies all replies to the oldest of the selected tickets and closes the other selected tickets."
   tickets_have_been_merged: "Tickets have been merged."
 
+# tickets/merge
+  ticket_has_been_merged_to: "This ticket has been merged to ticket #%{ticket_id}."
+  merge: Merge
+  merge_explanation: "Merge the selected tickets. This copies all replies to the oldest of the selected tickets and closes the other selected tickets."
+  tickets_have_been_merged: "Tickets have been merged."
+
 # replies/new
   add_reply: Add reply
 
@@ -159,6 +165,7 @@ en:
   email: Email
   role: Role
   agent: Agent
+  agents: Agents
   customer: Customer
 
 # users/_form
@@ -176,6 +183,7 @@ en:
   localization_settings: Localization settings
   permissions: Permissions
   reply_email_settings: Reply email settings
+  notification_settings: Notification settings
 
 # controllers/settings
   settings_saved: Settings saved
@@ -301,3 +309,4 @@ en:
         include_conversation_in_replies: Include conversation in reply emails
         logo_url: Logo url
         reply_email_footer: Reply email footer
+        first_reply_ignores_notified_agents: No notifications of first reply to other agents

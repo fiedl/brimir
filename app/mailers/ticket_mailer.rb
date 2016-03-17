@@ -22,6 +22,8 @@ class TicketMailer < ActionMailer::Base
   end
 
   def normalize_body(part, charset)
+    # some mail clients apparently send wrong charsets
+    charset = 'utf-8' if charset == 'utf8'
     encode(part.body.decoded.force_encoding(charset))
   end
 
@@ -142,6 +144,7 @@ class TicketMailer < ActionMailer::Base
         content_id = nil
         unless attachment.content_id.blank?
           content_id = attachment.content_id[1..-2]
+          content_id = nil unless incoming.content.include?(content_id)
         end
         incoming.attachments.create(file: file,
             content_id: content_id)

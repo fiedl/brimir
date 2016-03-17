@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Automatic refresh of inbox when browser tab receives focus again.
 - Internal notes can now be added to tickets.
+- Right to left support for Farsi.
+- Mobile menu fixes from @sapslaj.
+- Ticket creation and user creation api by @bsylvain.
+- Turkish translation by @yildizib.
+- Merge ticket feature by @fiedl.
 
 ### Changed
 
@@ -15,6 +20,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Ticket detail pages of tickets with draft replies could generate errors after saving a draft.
+- Replies can now be seen again by other agents when ticket is locked.
+- Attachments sent by Apple Mail which are not embedded now show up as real attachments.
+- HTML comments are now stripped from all HTML mail content.
 
 ### Security
 

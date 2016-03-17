@@ -19,6 +19,7 @@ gem 'foundation_rails_helper'
 
 # to use debugger
 gem 'byebug', group: [:development, :test]
+gem 'pry', group: [:development, :test]
 
 group :development do
   # Spring application pre-loader
@@ -60,7 +61,7 @@ gem 'will_paginate'
 gem 'paperclip'
 
 # select2 replacement for selectboxes
-gem 'select2-rails'
+gem 'select2-rails', '~> 3.5' # newer breaks Foundation Reveal on tickets#show
 
 gem 'font-awesome-rails', '~> 4.0'
 

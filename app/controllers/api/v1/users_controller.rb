@@ -13,37 +13,22 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+class Api::V1::UsersController < Api::V1::ApplicationController
+  include UsersStrongParams
+  load_and_authorize_resource :user
 
-class SettingsController < ApplicationController
-
-  def edit
-    @tenant = Tenant.current_tenant
-    authorize! :edit, @tenant
-  end
-
-  def update
-    @tenant = Tenant.current_tenant
-    authorize! :update, @tenant
-
-    if @tenant.update_attributes(tenant_params)
-      redirect_to tickets_url, notice: I18n.t(:settings_saved)
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      render nothing: true, status: :created
     else
-      render 'edit'
+      render nothing: true, status: :bad_request
     end
   end
 
-  protected
-
-  def tenant_params
-    params.require(:tenant).permit(
-      :default_time_zone,
-      :ignore_user_agent_locale,
-      :default_locale,
-      :share_drafts,
-      :include_conversation_in_replies,
-      :reply_email_footer,
-      :logo_url,
-      :first_reply_ignores_notified_agents
-    )
+  def show
+    unless @user = User.find_by(email: Base64.urlsafe_decode64(params[:email]))
+      render nothing: true, status: :bad_request
+    end
   end
 end

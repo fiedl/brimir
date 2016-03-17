@@ -14,36 +14,33 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class SettingsController < ApplicationController
-
-  def edit
-    @tenant = Tenant.current_tenant
-    authorize! :edit, @tenant
-  end
-
-  def update
-    @tenant = Tenant.current_tenant
-    authorize! :update, @tenant
-
-    if @tenant.update_attributes(tenant_params)
-      redirect_to tickets_url, notice: I18n.t(:settings_saved)
-    else
-      render 'edit'
-    end
-  end
-
+module UsersStrongParams
+  extend ActiveSupport::Concern
   protected
-
-  def tenant_params
-    params.require(:tenant).permit(
-      :default_time_zone,
-      :ignore_user_agent_locale,
-      :default_locale,
-      :share_drafts,
-      :include_conversation_in_replies,
-      :reply_email_footer,
-      :logo_url,
-      :first_reply_ignores_notified_agents
+  def user_params
+    attributes = params.require(:user).permit(
+        :email,
+        :password,
+        :password_confirmation,
+        :remember_me,
+        :signature,
+        :agent,
+        :notify,
+        :time_zone,
+        :locale,
+        :per_page,
+        :prefer_plain_text,
+        :include_quote_in_reply,
+        label_ids: []
     )
+
+    # prevent normal user and limited agent from changing email and role
+    if !current_user.agent? || current_user.labelings.count > 0
+      attributes.delete(:email)
+      attributes.delete(:agent)
+      attributes.delete(:label_ids)
+    end
+
+    return attributes
   end
 end

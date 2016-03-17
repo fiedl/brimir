@@ -23,20 +23,8 @@ class NotificationMailer < ActionMailer::Base
   def self.incoming_message(ticket_or_reply, original_message)
     if ticket_or_reply.is_a? Reply
       reply = ticket_or_reply
-      reply.set_default_notifications!
-
-      message_id = nil
-
-      reply.notified_users.each do |user|
-        message = NotificationMailer.new_reply(reply, user)
-        message.message_id = message_id
-        message.deliver_now
-
-        reply.message_id = message.message_id
-        message_id = message.message_id
-      end
-
-      reply.save
+      reply.set_default_notifications!(original_message)
+      reply.notify_users
     else
       ticket = ticket_or_reply
 
@@ -102,6 +90,12 @@ class NotificationMailer < ActionMailer::Base
   end
 
   def new_reply(reply, user)
+    return if user.ticket_system_address?
+    
+    if Tenant.current_tenant.include_conversation_in_replies?
+      return new_reply_with_conversation(reply, user)
+    end
+    
     unless user.locale.blank?
       @locale = user.locale
     else
@@ -119,8 +113,47 @@ class NotificationMailer < ActionMailer::Base
 
     @reply = reply
     @user = user
+    return if EmailAddress.pluck(:email).include?(user.email.to_s)
+    
+    displayed_to_field = reply.notified_users.where(agent: false).pluck(:email)
+    displayed_to_field = user.email if displayed_to_field.empty?
+    mail(smtp_envelope_to: user.email, to: displayed_to_field,
+      subject: title, from: reply.ticket.reply_from_address)
+  end
+  
+  def new_reply_with_conversation(reply, user)
+    return if user.ticket_system_address?
+    
+    replies = reply.ticket.replies.order(:created_at).select { |r| Ability.new(user).can? :read, r }
+    ticket = reply.ticket
+        
+    unless user.locale.blank?
+      @locale = user.locale
+    else
+      @locale = Rails.configuration.i18n.default_locale
+    end
+    title = I18n::translate(:new_reply, locale: @locale) + ': ' + reply.ticket.subject
 
-    mail(to: user.email, subject: title, from: reply.ticket.reply_from_address)
+    add_attachments(reply)
+    add_reference_message_ids(reply)
+    add_in_reply_to_message_id(reply)
+
+    unless reply.message_id.blank?
+      headers['Message-ID'] = "<#{reply.message_id}>"
+    end
+
+    @ticket = ticket
+    @replies = replies.reverse
+    @reply = reply
+    @user = user
+    @title = title
+
+    displayed_to_field = reply.notified_users.where(agent: false).pluck(:email)
+    displayed_to_field = user.email if displayed_to_field.empty?
+    mail(smtp_envelope_to: user.email, to: displayed_to_field,
+        subject: title, from: reply.ticket.reply_from_address) do |format|
+      format.html { render 'new_reply_with_conversation' }  
+    end
   end
   
   def new_reply_with_conversation(reply, replies, ticket, user)
