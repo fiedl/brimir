@@ -26,8 +26,6 @@ module QuotationCollapseHelper
     # 2. Detect common ways that lead in email quotes or signatures.
     #    http://stackoverflow.com/a/2193937/2066546
     #
-    result = collapse_regex(/<blockquote.*<\/blockquote>/im, result)
-    result = collapse_regex(/----.*/m, result)
     result = collapse_regex(/-----Original Message-----.*/im, result)
     result = collapse_regex(/Sent from my iPhone*/im, result)
     result = collapse_regex(/Sent from my BlackBerry*/im, result)
@@ -44,10 +42,13 @@ module QuotationCollapseHelper
         # the opening `<div>`. Otherwise, the closing `</div>` would close
         # the collapse.
         #
+        # Samewise, include all tags that are opened directly before
+        # the regex.
+        #
         # If there is no `<div>`, the [^a-zA-Z0-9] part makes sure, 
         # the expression does not start within another word.
         #
-        result = collapse_regex(/()((<div>)(#{regex}))()/im, result)
+        result = collapse_regex(/()((<[^\/]*>)(#{regex}))()/im, result)
         result = collapse_regex(/([^a-zA-Z0-9])(#{regex})()/im, result)
       end
     end
@@ -73,6 +74,11 @@ module QuotationCollapseHelper
           quote = whole_quotation
           content_after_quote = ""
         end
+        
+        # Clean-up html tags in order to have no closing-tags or tags that
+        # disturb the layout inside the quote.
+        #
+        quote = Nokogiri::HTML::fragment(sanitize(quote)).to_xml
         
         # The idea is to collapse via css in order to make it work
         # in emails as well.
