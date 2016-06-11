@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2015 Ivaldi https://ivaldi.nl/
+# Copyright (C) 2012-2016 Ivaldi https://ivaldi.nl/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -22,11 +22,16 @@ module EmailMessage
     accepts_nested_attributes_for :attachments, allow_destroy: true
 
     has_many :attached_files, -> { where(content_id: nil) }, as: :attachable, class_name: 'Attachment'
-    has_many :inline_files, -> { where.not(content_id: nil) }, as: :attachable, class_name: 'Attachment'
 
     has_attached_file :raw_message,
         path: Tenant.files_path
 
     do_not_validate_attachment_file_type :raw_message
+  end
+
+  def inline_files
+    attachments.where.not(content_id: nil).map do |attachment|
+      [attachment.content_id, attachment.file.url(:original)]
+    end.to_h
   end
 end

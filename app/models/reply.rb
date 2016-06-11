@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2015 Ivaldi https://ivaldi.nl/
+# Copyright (C) 2012-2016 Ivaldi https://ivaldi.nl/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,7 @@ class Reply < ActiveRecord::Base
   include CreateFromUser
   include EmailMessage
   include ReplyNotifications
+  include ReplyCreateFromStatusChange
 
   attr_accessor :reply_to_id
   attr_accessor :reply_to_type
@@ -57,7 +58,7 @@ class Reply < ActiveRecord::Base
   def other_replies
     ticket.replies.where.not(id: id)
   end
-  
+
   def first?
     reply_to_type == 'Ticket'
   end

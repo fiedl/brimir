@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2015 Ivaldi https://ivaldi.nl/
+# Copyright (C) 2012-2016 Ivaldi https://ivaldi.nl/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -45,6 +45,7 @@ class Tenant < ActiveRecord::Base
     end
 
     ActionMailer::Base.default_url_options = { host: "#{domain}" }
+    Rails.configuration.devise.mailer_sender = EmailAddress.default_email
 
     Paperclip.interpolates :domain do |attachment, style|
       # no schema based tenants, so no subdir

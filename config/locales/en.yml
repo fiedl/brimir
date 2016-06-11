@@ -11,11 +11,13 @@ en:
   personal_settings: Personal settings
   sign_out: Sign out
   delete: Remove
+  close: Close
+  wait: Wait
 
   joyride:
     tickets: Anybody can create tickets using this button.
     personal_settings: Set your signature, timezone and other preferences via this menu.
-    labels: After adding labels to tickets or users, they will show up here. You can then use them as filters.
+    labels: After adding labels to tickets or users, they will show up here. You can then use them as filters. New labels can be created on a ticket page.
     rules: Automatically add labels, assignees, change status and more.
     users: Add more agents or normal users.
     final: Thanks for using Brimir!
@@ -147,6 +149,8 @@ en:
   good_morning: Good morning
   good_day: Good day
   good_evening: Good evening
+  your_ticket_has_been_closed: "Your support ticket has been closed. If the issue is not resolved, yet, please feel free to reply. For new requests, please send a separate email. Thanks!"
+  str_is_working_on_your_ticket: "%{str} is working on your request, now."
 
 # attachments/_attachment
   download: download

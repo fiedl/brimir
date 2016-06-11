@@ -18,6 +18,10 @@ require 'test_helper'
 
 class ReplyTest < ActiveSupport::TestCase
 
+  setup do
+    Tenant.current_domain = tenants(:main).domain
+  end
+
   test 'should notify label users' do
     ticket = Ticket.new from: 'test@test.com', content: 'test'
     ticket.labels << labels(:bug)
@@ -29,7 +33,6 @@ class ReplyTest < ActiveSupport::TestCase
   end
 
   test 'should reply to all agents if not assigned' do
-    Tenant.current_domain = tenants(:main).domain
     Tenant.current_tenant.first_reply_ignores_notified_agents = true
 
     ticket = tickets(:daves_problem)
@@ -41,7 +44,6 @@ class ReplyTest < ActiveSupport::TestCase
   end
 
   test 'should not reply to all agents if assigned' do
-    Tenant.current_domain = tenants(:main).domain
     Tenant.current_tenant.first_reply_ignores_notified_agents = true
 
     ticket = tickets(:daves_problem)
@@ -54,10 +56,11 @@ class ReplyTest < ActiveSupport::TestCase
 
     refute reply.notified_users.include?(users(:alice))
     refute reply.notified_users.include?(users(:charlie))
+    assert reply.notified_users.include?(users(:dave))
+    assert reply.notified_users.include?(users(:bob)) # was CC-ed by Dave
   end
 
   test 'should reply to agent if assigned' do
-    Tenant.current_domain = tenants(:main).domain
     Tenant.current_tenant.first_reply_ignores_notified_agents = false
 
     ticket = tickets(:daves_problem)
@@ -87,21 +90,21 @@ class ReplyTest < ActiveSupport::TestCase
     agent = User.create! email: 'agent@example.com', agent: true
     client1 = User.create! email: 'client1@example.com'
     client2 = User.create! email: 'client2@example.com'
-    
+
     # client1 creates a ticket via email.
     ticket = Ticket.create from: 'client1@example.com', content: 'This is my problem'
-    
+
     # agent replies via the web ui of brimir.
     reply_of_the_agent = ticket.replies.create! content: 'This might be the solution. It did work for client2 who also works in your office.', user: agent
     reply_of_the_agent.notified_users << client1
     reply_of_the_agent.notified_users << client2
-    
+
     # client1 replies via email; cc to client2.
     reply_of_client1 = ticket.replies.create! content: 'It did not work.', user: client1
     reply_of_client1.reply_to = reply_of_the_agent
     reply_of_client1.set_default_notifications!("From: client1@example.com\nTo: ...")
     reply_of_client1.notified_users << client2 unless reply_of_client1.notified_users.include? client2
-    
+
     assert reply_of_client1.notified_users.include?(agent)
     assert reply_of_client1.notified_users.include?(client2)
 
@@ -109,17 +112,17 @@ class ReplyTest < ActiveSupport::TestCase
     reply_of_client2 = ticket.replies.create! content: 'client1 is stupid! Did he even start his computer?', user: client2
     reply_of_client2.reply_to = reply_of_the_agent
     reply_of_client2.set_default_notifications!("From: client2@example.com\nTo: ...")
-    
+
     assert reply_of_client2.notified_users.include?(agent)
     assert not(reply_of_client2.notified_users.include?(client1))
   end
-  
+
   test 'should sync the message ids of notifications' do
     ticket = tickets(:daves_problem)
     reply = ticket.replies.create user: users(:alice), content: "This is the solution."
     reply.notified_users << users(:dave)
     reply.notified_users << users(:bob)
-    
+
     message_ids = reply.notification_mails.map(&:message_id)
     assert_equal message_ids.count,  2
     assert_equal message_ids.uniq.count, 1
