@@ -30,7 +30,11 @@
           </div>
           <div style="overflow: hidden">
             <small>
-              <%= reply.user.agent? ? @ticket.reply_from_address : reply.user.email %>,
+              <% if reply.user.agent? %>
+                <%= reply.user.name %> &lt;<%= @ticket.reply_from_address %>&gt;,
+              <% else %>
+                <%= reply.user.email %>,
+              <% end %>
               <%= localize(reply.created_at) %>
             </small>
             <div class="reply_body">
