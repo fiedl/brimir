@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2015 Ivaldi https://ivaldi.nl/
+# Copyright (C) 2012-2016 Ivaldi https://ivaldi.nl/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   has_many :labels, through: :labelings
   has_many :assigned_tickets, class_name: 'Ticket',
       foreign_key: 'assignee_id', dependent: :nullify
-  has_many :notifications    
+  has_many :notifications, dependent: :destroy
 
   # identities for omniauth
   has_many :identities
@@ -73,6 +73,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def name
+    super || name_from_email_address
+  end
+
+  def name_from_email_address
+    email.split('@').first
+  end
+
   def self.agents_to_notify
     User.agents
         .where(notify: true)
@@ -96,7 +104,7 @@ class User < ActiveRecord::Base
   def self.ticket_system_addresses
     User.where(email: EmailAddress.pluck(:email))
   end
-  
+
   def client?
     not agent?
   end
