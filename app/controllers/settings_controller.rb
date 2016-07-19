@@ -40,6 +40,8 @@ class SettingsController < ApplicationController
       :ignore_user_agent_locale,
       :default_locale,
       :share_drafts,
+      :first_reply_ignores_notified_agents,
+      :notify_client_when_ticket_is_assigned_or_closed,
       :include_conversation_in_replies,
       :reply_email_footer,
       :logo_url,
