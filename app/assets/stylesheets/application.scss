@@ -173,6 +173,10 @@ pre {
 	background-color: #fff6d9 !important;
 }
 
+.status-reply li > a, .status-reply .row {
+	background-color: #eaeef0 !important;
+}
+
 input.hidden-collapse-checkbox:not(:checked) + span .collapsed-quote-content {
   display: none;
 }

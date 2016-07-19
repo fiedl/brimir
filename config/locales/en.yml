@@ -149,8 +149,8 @@ en:
   good_morning: Good morning
   good_day: Good day
   good_evening: Good evening
-  your_ticket_has_been_closed: "Your support ticket has been closed. If the issue is not resolved, yet, please feel free to reply. For new requests, please send a separate email. Thanks!"
-  str_is_working_on_your_ticket: "%{str} is working on your request, now."
+  your_ticket_has_been_closed: "Your support ticket has been closed. If the issue is not resolved, yet, please feel free to reply. For new requests, please send a separate email."
+  str_is_working_on_your_ticket: "%{str} will handle your support ticket."
 
 # attachments/_attachment
   download: download
@@ -253,6 +253,7 @@ en:
   activerecord:
     attributes:
       user:
+        name: Name
         email: Email
         password: Password
         password_confirmation: Password confirmation
@@ -314,3 +315,4 @@ en:
         logo_url: Logo url
         reply_email_footer: Reply email footer
         first_reply_ignores_notified_agents: No notifications of first reply to other agents
+        notify_client_when_ticket_is_assigned_or_closed: Notify the client when his ticket is assigned or closed.
