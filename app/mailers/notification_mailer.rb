@@ -88,11 +88,11 @@ class NotificationMailer < ActionMailer::Base
 
   def new_reply(reply, user)
     return if user.ticket_system_address?
-    
+
     if Tenant.current_tenant.include_conversation_in_replies?
       return new_reply_with_conversation(reply, user)
     end
-    
+
     unless user.locale.blank?
       @locale = user.locale
     else
@@ -120,13 +120,13 @@ class NotificationMailer < ActionMailer::Base
     message.smtp_envelope_to = user.email
     return message
   end
-  
+
   def new_reply_with_conversation(reply, user)
     return if user.ticket_system_address?
-    
+
     replies = reply.ticket.replies.order(:created_at).select { |r| Ability.new(user).can? :read, r }
     ticket = reply.ticket
-        
+
     unless user.locale.blank?
       @locale = user.locale
     else
@@ -150,10 +150,13 @@ class NotificationMailer < ActionMailer::Base
 
     displayed_to_field = reply.notified_users.where(agent: false).pluck(:email)
     displayed_to_field = user.email if displayed_to_field.empty?
-    mail(smtp_envelope_to: user.email, to: displayed_to_field,
+
+    message = mail(smtp_envelope_to: user.email, to: displayed_to_field,
         subject: title, from: reply.ticket.reply_from_address) do |format|
-      format.html { render 'new_reply_with_conversation' }  
+      format.html { render 'new_reply_with_conversation' }
     end
+    message.smtp_envelope_to = user.email
+    return message
   end
   
   def status_changed(ticket)
