@@ -53,8 +53,9 @@ module EmailMessage
 
       if File.exists?(file_name) && File.file?(file_name)
         imported_text_content = ExtendedEmailReplyParser.extract_text file_name
-        self.text_content ||= imported_text_content
-        self.save
+        if self.read_attribute(:text_content).nil?
+          self.update_column :text_content, imported_text_content
+        end
         return imported_text_content
       else
         return nil
