@@ -2,7 +2,7 @@ module EmailReplyParserHelper
 
   def parse_email_reply(ticket_or_reply)
     content = if ticket_or_reply.text_content && (not ticket_or_reply.text_content.include?("<p>"))
-      pre_and_wrap email_reply_parser strip_tags ticket_or_reply.text_content
+      pre_and_wrap email_reply_parser ticket_or_reply.text_content
     elsif ticket_or_reply.content_type == 'text'
       pre_and_wrap email_reply_parser ticket_or_reply.content
     elsif ticket_or_reply.content_type == 'html'
@@ -22,7 +22,7 @@ module EmailReplyParserHelper
   end
 
   def email_reply_parser(text)
-    ExtendedEmailReplyParser::Base.parse text
+    ExtendedEmailReplyParser.parse text
   end
 
 end
