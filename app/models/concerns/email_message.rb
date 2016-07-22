@@ -52,9 +52,10 @@ module EmailMessage
       file_name.gsub!(":domain", Tenant.current_tenant.domain.to_s)
 
       if File.exists?(file_name) && File.file?(file_name)
-        self.text_content ||= ExtendedEmailReplyParser.extract_text file_name
+        imported_text_content = ExtendedEmailReplyParser.extract_text file_name
+        self.text_content ||= imported_text_content
         self.save
-        return self.text_content
+        return imported_text_content
       else
         return nil
       end
