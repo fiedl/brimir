@@ -34,4 +34,47 @@ module EmailMessage
       [attachment.content_id, attachment.file.url(:original)]
     end.to_h
   end
+
+  def text_content
+    super || import_text_content_from_raw_message
+  end
+
+  # This is needed because the text_content column has been created
+  # later. For existing tickets and replies, the text_content is
+  # extracted from the raw_message here.
+  #
+  def import_text_content_from_raw_message
+    if original_raw_message? && file_name = original_raw_message.try(:path, :original)
+
+      # Fix file path. It seems not all placeholders are replaced.
+      # See also: Tenant#files_path
+      #
+      file_name.gsub!(":domain", Tenant.current_tenant.domain.to_s)
+
+      if File.exists?(file_name) && File.file?(file_name)
+        self.text_content ||= ExtendedEmailReplyParser.extract_text file_name
+        self.save
+        return self.text_content
+      else
+        return nil
+      end
+    end
+  end
+
+  # This is needed because the raw messages are not copied over correctly
+  # when merging tickets.
+  #
+  def original_raw_message
+    original_before_merge.try(:raw_message) || raw_message
+  end
+  def original_raw_message?
+    (original_before_merge || self).raw_message_file_size.to_i > 0
+  end
+  def original_before_merge
+    if self.kind_of? Reply
+      Ticket.where(message_id: message_id).first || Reply.where(message_id: message_id).where.not(id: id).first
+    else
+      nil
+    end
+  end
 end

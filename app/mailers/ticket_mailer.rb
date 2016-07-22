@@ -60,6 +60,8 @@ class TicketMailer < ActionMailer::Base
       end
     end
 
+    text_content = ExtendedEmailReplyParser.extract_text(email)
+
     if email.charset
       subject = encode(email.subject.to_s.force_encoding(email.charset))
     else
@@ -97,6 +99,7 @@ class TicketMailer < ActionMailer::Base
       # add reply
       incoming = Reply.create({
         content: content,
+        text_content: text_content,
         ticket_id: ticket.id,
         from: from_address,
         message_id: email.message_id,
@@ -116,6 +119,7 @@ class TicketMailer < ActionMailer::Base
         from: from_address,
         subject: subject,
         content: content,
+        text_content: text_content,
         message_id: email.message_id,
         content_type: content_type,
         to_email_address: to_email_address,

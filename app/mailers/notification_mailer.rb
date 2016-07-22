@@ -18,7 +18,7 @@ class NotificationMailer < ActionMailer::Base
 
   add_template_helper HtmlTextHelper
   add_template_helper AvatarHelper
-  add_template_helper QuotationCollapseHelper
+  add_template_helper EmailReplyParserHelper
 
   def self.incoming_message(ticket_or_reply, original_message)
     if ticket_or_reply.is_a? Reply
