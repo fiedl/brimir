@@ -23,12 +23,7 @@
           <a class="pull-right text-default" href="<%= reply_path(reply, format: :eml) %>"><%= fa_icon 'save' %></a>
         <% end %>
 
-        <% if reply.content_type == 'html' %>
-          <%= handle_quotation_collapse(sanitize_html(reply.content, reply.inline_files)).html_safe %>
-        <% else %>
-          <pre><%= word_wrap(reply.content, line_width: 72) %></pre>
-        <% end %>
-
+        <%= parse_email_reply reply %>
 
         <% if reply.attached_files.size > 0 %>
           <hr />

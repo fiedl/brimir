@@ -22,7 +22,7 @@ gem 'pry', group: [:development, :test]
 group :development do
   # Spring application pre-loader
   gem 'spring'
-  
+
   # open sent emails in the browser
   gem 'letter_opener'
 end
@@ -84,3 +84,9 @@ gem 'fancybox2-rails', '~> 0.2.8'
 
 # gravatar for user avatar images
 gem 'gravatar_image_tag'
+
+# bring back auto_link
+gem 'rinku', require: 'rails_rinku'
+
+# parse emails
+gem 'extended_email_reply_parser', '~> 0.3'

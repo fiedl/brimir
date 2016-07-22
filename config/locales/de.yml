@@ -112,7 +112,6 @@ de:
   attach_file: Datei anhängen
   send_reply: Anwort senden
   on_date_author_wrote: 'Am %{date} hat %{author} folgendes geschrieben:'
-  on_date_author_wrote_regex: 'Am .* hat .* geschrieben:.*|Am .* schrieb.*:.*|Am .* schrieb:.*|Von:.*\@.*'
   notification_will_be_sent_to: 'Es wird eine Benachrichtung an folgende Adresse gesendet:'
   save_as_draft: Als Entwurf speichern
   internal_note: Interne Notiz
@@ -137,6 +136,7 @@ de:
   good_evening: Guten Abend
   your_ticket_has_been_closed: 'Dein Support-Ticket wurde geschlossen. Wenn das Problem noch nicht gelöst wurde, antworte einfach auf diese Nachricht. Für neue Anliegen schreibe bitte eine separate E-Mail. Danke!'
   str_is_working_on_your_ticket: "Dein Anliegen wird jetzt von %{str} bearbeitet."
+  show_full_message: Vollständige Nachricht anzeigen
 
 # attachments/_attachment
   download: Öffnen

@@ -1,19 +1,7 @@
 <style>
   .reply_body { background-color: white; border: 1px solid #DBDBDB; -webkit-border-radius: 3px; border-radius: 3px; display: block; margin: 6px 0; padding: 10px 12px 0 12px; margin-right: 40px }
   img.avatar { -webkit-border-radius: 3px; border-radius: 3px; }
-  input.hidden-collapse-checkbox:not(:checked) + span .collapsed-quote-content {
-    display: none;
-  }
-  input.hidden-collapse-checkbox:checked + span .collapsed-quote-content {
-    display: block;
-  }
-  .hidden-collapse-checkbox {
-    display: none;
-  }
-  label.collapse-quote-toggle {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
+  .show_full_message { text-align: right; font-size: 80%; margin-right: 40px }
 </style>
 <div style="font-family: Helvetica; background-color: #F0F0F0">
   <div class="header" style="background-color: #337ab7; color: #ffffff; margin-top: 0; margin-left: 0; margin-right: 0; margin-bottom: 20px; padding: 20px;">
@@ -39,12 +27,11 @@
             </small>
             <div class="reply_body">
               <p>
-                <% if reply.content_type == 'html' %>
-                  <%= handle_quotation_collapse(sanitize_html(reply.content)).html_safe %>
-                <% else %>
-                  <pre><%= reply.content %></pre>
-                <% end %>
+                <%= parse_email_reply(reply) %>
               </p>
+            </div>
+            <div class="show_full_message">
+              <%= link_to t(:show_full_message), reply_url(reply, format: :eml) if reply.raw_message_file_size.to_i > 0 %>
             </div>
           </div>
         </div>
@@ -62,12 +49,11 @@
           </small>
           <div class="reply_body">
             <p>
-              <% if @ticket.content_type == 'html' %>
-                <%= handle_quotation_collapse(sanitize_html(@ticket.content)).html_safe %>
-              <% else %>
-                <pre><%= @ticket.content %></pre>
-              <% end %>
+              <%= parse_email_reply @ticket %>
             </p>
+          </div>
+          <div class="show_full_message">
+            <%= link_to t(:show_full_message), ticket_url(@ticket, format: :eml) if @ticket.raw_message_file_size.to_i > 0 %>
           </div>
         </div>
       </div>

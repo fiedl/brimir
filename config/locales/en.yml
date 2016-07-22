@@ -117,7 +117,6 @@ en:
   attach_file: Attach file
   send_reply: Send reply
   on_date_author_wrote: 'On %{date}, %{author} wrote:'
-  on_date_author_wrote_regex: 'On .*wrote:.*|From:.*\@.*'
   notification_will_be_sent_to: Your notification will be sent to
   save_as_draft: Save as draft
   internal_note: Internal note
@@ -145,6 +144,7 @@ en:
   good_evening: Good evening
   your_ticket_has_been_closed: "Your support ticket has been closed. If the issue is not resolved, yet, please feel free to reply. For new requests, please send a separate email."
   str_is_working_on_your_ticket: "%{str} will handle your support ticket."
+  show_full_message: Show full message
 
 # attachments/_attachment
   download: download
