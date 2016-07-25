@@ -25,6 +25,7 @@ concern :TicketMerge do
   def to_reply
     Reply.new(
       content: self.content,
+      text_content: self.text_content,
       created_at: self.created_at,
       updated_at: self.updated_at,
       user_id: self.user_id,
