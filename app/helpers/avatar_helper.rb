@@ -103,6 +103,11 @@ module AvatarHelper
   def user_gravatar(user, options = {})
     options[:gravatar] ||= {}
     options[:gravatar][:size] ||= options[:size] if options[:size]
+
+    # Fixing "undefined method `gsub' for 36:Fixnum"
+    options[:size] = options[:size].to_s
+    options[:gravatar][:size] = options[:gravatar][:size].to_s
+
     gravatar_image_tag(user.email, gravatar_default_options.deep_merge(options))
   end
 
