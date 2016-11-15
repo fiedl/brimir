@@ -44,12 +44,7 @@ module EmailMessage
   # extracted from the raw_message here.
   #
   def import_text_content_from_raw_message
-    if raw_message? && file_name = raw_message.try(:path, :original)
-
-      # Fix file path. It seems not all placeholders are replaced.
-      # See also: Tenant#files_path
-      #
-      file_name.gsub!(":domain", Tenant.current_tenant.domain.to_s)
+    if raw_message? && file_name = raw_message.file_path
 
       if File.exists?(file_name) && File.file?(file_name) && Mail.read(file_name).content_type
         imported_text_content = ExtendedEmailReplyParser.extract_text file_name
