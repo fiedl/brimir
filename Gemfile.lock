@@ -92,7 +92,7 @@ GEM
     email_reply_parser (0.5.9)
     erubis (2.7.0)
     execjs (2.6.0)
-    extended_email_reply_parser (0.4.0)
+    extended_email_reply_parser (0.5.0)
       activesupport
       charlock_holmes
       email_reply_parser (~> 0.5.9)
@@ -274,7 +274,7 @@ DEPENDENCIES
   devise
   devise-i18n
   devise_ldap_authenticatable
-  extended_email_reply_parser (>= 0.4.0)
+  extended_email_reply_parser (>= 0.5.0)
   fancybox2-rails (~> 0.2.8)
   font-awesome-rails (~> 4.0)
   foundation-rails (~> 5.5.0)
