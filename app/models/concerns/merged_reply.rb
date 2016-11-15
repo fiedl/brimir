@@ -29,7 +29,7 @@ concern :MergedReply do
   end
 
   def raw_message
-    if super.try(:path, :original) && File.file?(super.path(:original))
+    if super.try(:file_exists?)
       super
     elsif original_ticket_or_reply_before_merge.try(:raw_message?)
       original_ticket_or_reply_before_merge.raw_message
@@ -39,6 +39,6 @@ concern :MergedReply do
   end
 
   def raw_message?
-    raw_message.try(:path, :original) && File.file?(raw_message.path(:original))
+    raw_message.try(:file_exists?)
   end
 end
