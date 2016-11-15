@@ -91,7 +91,7 @@ gem 'gravatar_image_tag'
 gem 'rinku', require: 'rails_rinku'
 
 # parse emails
-gem 'extended_email_reply_parser', '>= 0.4.0' # github: 'fiedl/extended_email_reply_parser'
+gem 'extended_email_reply_parser', '>= 0.5.0' # github: 'fiedl/extended_email_reply_parser'
 
 # exception notification via email
 gem 'exception_notification'
