@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160721124844) do
+ActiveRecord::Schema.define(version: 20161125141914) do
 
   create_table "attachments", force: :cascade do |t|
     t.integer  "attachable_id"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 20160721124844) do
     t.datetime "updated_at"
     t.string   "verification_token"
     t.string   "name"
+  end
+
+  create_table "email_templates", force: :cascade do |t|
+    t.string   "name"
+    t.text     "message"
+    t.integer  "kind",                      null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.boolean  "draft",      default: true, null: false
   end
 
   create_table "identities", force: :cascade do |t|
@@ -130,9 +139,15 @@ ActiveRecord::Schema.define(version: 20160721124844) do
     t.boolean  "share_drafts",                                    default: false
     t.boolean  "first_reply_ignores_notified_agents",             default: false,       null: false
     t.boolean  "notify_client_when_ticket_is_assigned_or_closed", default: false,       null: false
+    t.boolean  "notify_user_when_account_is_created",             default: false
+    t.boolean  "notify_client_when_ticket_is_created",            default: false
+    t.integer  "email_template_id"
+    t.boolean  "ticket_creation_is_open_to_the_world"
+    t.string   "stylesheet_url"
   end
 
   add_index "tenants", ["domain"], name: "index_tenants_on_domain", unique: true
+  add_index "tenants", ["email_template_id"], name: "index_tenants_on_email_template_id"
 
   create_table "tickets", force: :cascade do |t|
     t.string   "subject"
@@ -153,6 +168,8 @@ ActiveRecord::Schema.define(version: 20160721124844) do
     t.integer  "raw_message_file_size"
     t.datetime "raw_message_updated_at"
     t.text     "text_content",             limit: 1073741823
+    t.string   "orig_to"
+    t.string   "orig_cc"
   end
 
   add_index "tickets", ["assignee_id"], name: "index_tickets_on_assignee_id"
@@ -162,6 +179,11 @@ ActiveRecord::Schema.define(version: 20160721124844) do
   add_index "tickets", ["status"], name: "index_tickets_on_status"
   add_index "tickets", ["to_email_address_id"], name: "index_tickets_on_to_email_address_id"
   add_index "tickets", ["user_id"], name: "index_tickets_on_user_id"
+
+  create_table "tickets_users", id: false, force: :cascade do |t|
+    t.integer "ticket_id", null: false
+    t.integer "user_id",   null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at"

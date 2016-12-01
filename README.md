@@ -44,6 +44,16 @@ If you want to use LDAP, configure config/ldap.yml accordingly, then change the 
     bin/rails console production
     u = User.new({ email: 'your@email.address', password: 'somepassword', password_confirmation: 'somepassword' }); u.agent = true; u.save!
 
+Configuring Captcha's
+---------------------
+If you want to use recaptcha in production you have to go to
+https://www.google.com/recaptcha, create your private and public keys and export these to your production environment, by running:
+
+    export RECAPTCHA_PUBLIC_KEY="[YOUR_KEY]"
+    export RECAPTCHA_PRIVATE_KEY="[YOUR_KEY]"
+
+Remove the recaptcha lines from config/secrets.yml if you don't want to use captcha's all together.
+
 Updating
 --------
 First download the new code in the same directory by unpacking a release tarball or by running `git pull` (when you cloned the repo earlier). After updating code run the following commands to install necessary gem updates, migrate the database and regenerate precompiled assets.
@@ -87,27 +97,22 @@ Some users have made requests for the following features. If you would like to c
 - Automated replies based on the current rule system.
 - Remove user functionality, without losing ticket and reply information.
 - Adding knowledge base functionality.
-- Welcome mail for new users (after mailing a ticket for example) with their password.
 - Set priority, assignee and labels on the create ticket form.
 - Assign tickets to groups of users
 - When replying, select a response from pre-defined canned responses and modify to your needs
 - TicketsController#create should limit access to IP and be user/pass protected
-- TicketsController#new should be configurable as open-to-the-world or not
 - Integration with OpsWeekly
 - Social media integration such as FreshDesk and Zoho have (reply to requests via social media)
 - Ticket creation api (and improving existing api)
-- Unread ticket status per user.
 - Ticket search that also searches in from field and replies.
 - Mark tickets as duplicate, linking it to the duplicated ticket.
 - Ability to rename tickets (change their subject).
 - Ability to rename labels.
 - Improve rule form to allow only valid statuses (#150).
-- A better WYSIWYG editor, for example QuilJS (#172).
 - Timed rules, such as re-assigning when no reply is added withing 24 hours (#203).
 - Desktop notifications using web notifications (#218).
 - Custom ticket statuses, all via database. (#217)
 - Filter on to/cc/bcc without verified addresses. (#227)
-- Add captcha for non-signed in ticket creation. (#228)
 - IMAP or POP3 pull mechanism for new tickets. (#249)
 - Notes field for customer account, to add info about them, such as website url.
 

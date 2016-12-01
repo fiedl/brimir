@@ -42,10 +42,13 @@ class SettingsController < ApplicationController
       :share_drafts,
       :first_reply_ignores_notified_agents,
       :notify_client_when_ticket_is_assigned_or_closed,
+      :notify_user_when_account_is_created,
+      :notify_client_when_ticket_is_created,
+      :ticket_creation_is_open_to_the_world,
+      :stylesheet_url,
       :include_conversation_in_replies,
       :reply_email_footer,
-      :logo_url,
-      :first_reply_ignores_notified_agents
+      :logo_url
     )
   end
 end

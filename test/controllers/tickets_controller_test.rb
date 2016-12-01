@@ -71,41 +71,16 @@ class TicketsControllerTest < ActionController::TestCase
 
   end
 
-  test 'should not create ticket when invalid' do
-
-    assert_no_difference 'ActionMailer::Base.deliveries.size' do
-      assert_no_difference 'Ticket.count' do
-        post :create, ticket: {
-            from: 'invalid',
-            content: '',
-            subject: '',
-        }
-
-        assert_response :success
-      end
-    end
-
-    assert_equal 0, assigns(:ticket).notified_users.count
-  end
-
-  test 'should create ticket when not signed in' do
-
-    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
-      assert_difference 'Ticket.count' do
-        post :create, ticket: {
-            from: 'test@test.nl',
-            content: @ticket.content,
-            subject: @ticket.subject,
-        }
-
-        assert_response :success
-      end
-    end
-
-    refute_equal 0, assigns(:ticket).notified_users.count
-  end
-
-  test 'should create ticket when signed in' do
+  # BEGIN OF TESTS FOR TICKET CREATION
+  # SITUATIONS:
+  # 1) CAPTCHA / NO CAPTCHA
+  # 2) SIGNED IN / NOT SIGNED IN
+  # 3) ERROR IN FORM / NO ERROR IN FORM
+  # SITUATION: 2^N
+  # ========================================================
+  
+  # FIRST
+  test 'should create ticket when signed in and captcha' do
     sign_in users(:alice)
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
@@ -122,6 +97,182 @@ class TicketsControllerTest < ActionController::TestCase
       refute_equal 0, assigns(:ticket).notified_users.count
     end
   end
+
+  # SECOND
+  test 'should not create ticket when ivalid and captcha and signed in' do
+    sign_in users(:alice)
+
+    assert_no_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
+      assert_no_difference 'Ticket.count' do
+        post :create, ticket: {
+            from: 'invalid',
+            content: '',
+            subject: '',
+        }
+
+        assert_response :success
+      end
+    end
+
+    assert_equal 0, assigns(:ticket).notified_users.count
+  end
+
+  # THIRD
+  test 'should create ticket when not signed in and captcha' do
+
+    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
+      assert_difference 'Ticket.count' do
+        post :create, ticket: {
+            from: 'test@test.nl',
+            content: @ticket.content,
+            subject: @ticket.subject,
+        }
+
+        assert_response :success
+      end
+    end
+
+    refute_equal 0, assigns(:ticket).notified_users.count
+  end
+
+  # FOURTH
+  test 'should not create ticket when not signed in and invalid and captcha' do
+
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+      assert_no_difference 'Ticket.count' do
+        post :create, ticket: {
+            from: 'invalid',
+            content: '',
+            subject: '',
+        }
+
+        assert_response :success
+      end
+    end
+
+    assert_equal 0, assigns(:ticket).notified_users.count
+  end
+
+  # FIFTH
+  test 'should create ticket when signed in and no captcha' do
+    # we need these after the test
+    private_key = Recaptcha.configuration.private_key
+    public_key  = Recaptcha.configuration.public_key
+
+    # set blank for this test
+    Recaptcha.configuration.private_key = ''
+    Recaptcha.configuration.public_key = ''
+    sign_in users(:alice)
+
+    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
+      assert_difference 'Ticket.count', 1 do
+        post :create, ticket: {
+            from: 'test@test.nl',
+            content: @ticket.content,
+            subject: @ticket.subject,
+        }
+
+        assert_redirected_to ticket_url(assigns(:ticket))
+      end
+
+      # set the configration back to default
+      Recaptcha.configuration.private_key = private_key
+      Recaptcha.configuration.public_key = public_key
+
+      refute_equal 0, assigns(:ticket).notified_users.count
+    end
+  end
+
+  # SIXTH
+  test 'should not create ticket when signed in and invalid and no captcha' do
+    # we need these after the test
+    private_key = Recaptcha.configuration.private_key
+    public_key  = Recaptcha.configuration.public_key
+
+    # set blank for this test
+    Recaptcha.configuration.private_key = ''
+    Recaptcha.configuration.public_key = ''
+
+    sign_in users(:alice)
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+      assert_no_difference 'Ticket.count' do
+        post :create, ticket: {
+            from: 'invalid',
+            content: '',
+            subject: '',
+        }
+
+        assert_response :success
+      end
+    end
+
+    # set the configration back to default
+    Recaptcha.configuration.private_key = private_key
+    Recaptcha.configuration.public_key = public_key
+
+    assert_equal 0, assigns(:ticket).notified_users.count
+  end
+
+  # SEVENTH
+  test 'should create ticket when not signed in and no captcha' do
+    # we need these after the test
+    private_key = Recaptcha.configuration.private_key
+    public_key  = Recaptcha.configuration.public_key
+
+    # set blank for this test
+    Recaptcha.configuration.private_key = ''
+    Recaptcha.configuration.public_key = ''
+
+    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
+      assert_difference 'Ticket.count', 1 do
+        post :create, ticket: {
+            from: 'test@test.nl',
+            content: @ticket.content,
+            subject: @ticket.subject,
+        }
+
+        assert_response :success
+      end
+
+
+      # set the configration back to default
+      Recaptcha.configuration.private_key = private_key
+      Recaptcha.configuration.public_key = public_key
+
+      refute_equal 0, assigns(:ticket).notified_users.count
+    end
+  end
+
+  # EIGHT
+  test 'should not create ticket when not signed in and no captcha' do
+    # we need these after the test
+    private_key = Recaptcha.configuration.private_key
+    public_key  = Recaptcha.configuration.public_key
+
+    # set blank for this test
+    Recaptcha.configuration.private_key = ''
+    Recaptcha.configuration.public_key = ''
+
+    assert_no_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
+      assert_no_difference 'Ticket.count' do
+        post :create, ticket: {
+            from: 'invalid',
+            content: '',
+            subject: '',
+        }
+
+        assert_response :success
+      end
+    end
+
+    # set the configration back to default
+    Recaptcha.configuration.private_key = private_key
+    Recaptcha.configuration.public_key = public_key
+    assert_equal 0, assigns(:ticket).notified_users.count
+  end
+
+  # END OF TESTS FOR TICKET CREATION
+  # ========================================================
 
   test 'should only allow agents to view others tickets' do
     sign_in users(:bob)
@@ -348,5 +499,62 @@ class TicketsControllerTest < ActionController::TestCase
     get :show, id: @ticket.id
     assert_response :success
     assert_match replies(:solution).content, @response.body
+  end
+  
+  test 'should mark new ticket from MTA as unread for all users' do
+    assert_difference 'Ticket.count' do
+
+      post :create, message: @simple_email, format: :json
+
+      assert_response :success
+
+      ticket = Ticket.last
+      assert_not_nil ticket.unread_users.nil?
+    end
+  end
+
+  test 'should mark new ticket as unread for all users' do
+    assert_difference 'Ticket.count' do
+      post :create, ticket: {
+          from: 'test@test.nl',
+          content: @ticket.content,
+          subject: @ticket.subject,
+      }
+
+      assert_response :success
+
+      ticket = Ticket.last
+
+      assert_not_nil ticket.unread_users.nil?
+    end
+  end
+
+  test 'should mark new ticket as unread for all users when posted from MTA' do
+    assert_difference 'Ticket.count' do
+
+      post :create, message: @simple_email, format: :json
+
+      assert_response :success
+
+      ticket = Ticket.last
+      assert_not_nil ticket.unread_users
+    end
+  end
+
+  test 'should mark ticket as read when clicked' do
+    user = users(:alice)
+    sign_in user
+    ticket = Ticket.last
+    ticket.unread_users << User.all
+    assert_difference 'Ticket.last.unread_users.count', -1 do
+
+      assert_not_nil ticket.unread_users
+
+      get :show, id: ticket.id
+
+      assert_response :success
+
+      assert_not ticket.unread_users.include?(user)
+    end
   end
 end
