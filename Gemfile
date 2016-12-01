@@ -63,9 +63,6 @@ gem 'select2-rails', '~> 3.5' # newer breaks Foundation Reveal on tickets#show
 
 gem 'font-awesome-rails', '~> 4.0'
 
-# TinyMCE 4 for WYSIWYG in textareas
-gem 'tinymce-rails'
-
 # for language detection
 gem 'http_accept_language'
 
@@ -84,6 +81,15 @@ gem 'fancybox2-rails', '~> 0.2.8'
 
 # gravatar for user avatar images
 gem 'gravatar_image_tag'
+
+# Captcha for brimir
+gem 'recaptcha', require: 'recaptcha/rails'
+
+# Trix WYSIWYG editor
+gem 'trix'
+
+# React support
+gem 'react-rails'
 
 # bring back auto_link
 gem 'rinku', require: 'rails_rinku'
