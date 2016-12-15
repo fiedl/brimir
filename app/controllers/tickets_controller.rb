@@ -147,7 +147,7 @@ class TicketsController < ApplicationController
   end
 
   def new
-    if @tenant.ticket_creation_is_open_to_the_world  == false &&
+    if !@tenant.ticket_creation_is_open_to_the_world? &&
           current_user.nil?
       render status: :forbidden, text: t(:access_denied)
     else
@@ -160,7 +160,7 @@ class TicketsController < ApplicationController
   end
 
   def create
-    # the hooks that is triggered when receiving an email.
+    # the hook that is triggered when receiving an email.
     if params[:format] == 'json'
       using_hook = true # we assume different policies to create a ticket when we receive an email
       @ticket = TicketMailer.receive(params[:message])
@@ -180,11 +180,11 @@ class TicketsController < ApplicationController
     # Fiedl: Quick fix since the content type isn't always detected correctly.
     @ticket.content_type = 'html' if @ticket && @ticket.content && (@ticket.content.include?("<p>") or @ticket.content.include?("<html>"))
 
-    if @tenant.ticket_creation_is_open_to_the_world == false &&
+    if !@tenant.ticket_creation_is_open_to_the_world? &&
           current_user.nil? && !using_hook
       render status: :forbidden, text: t(:access_denied)
-    elsif can_create_a_ticket(using_hook) &&
-        @ticket.save_with_label(params[:label])
+    elsif can_create_a_ticket(using_hook) && 
+        (@ticket.is_a?(Reply) || @ticket.save_with_label(params[:label]))
       notify_incoming @ticket
 
       respond_to do |format|
@@ -220,10 +220,10 @@ class TicketsController < ApplicationController
     if @ticket.nil? || !@ticket.valid?
       flash.now[:alert] = I18n::translate(:form_validation_error)
       false
-    # relax policy for request coming from emails
+    # relax policy for requests coming from emails
     elsif using_hook
       true
-    # strict policy for request coming from the application
+    # strict policy for requests coming from the application
     else
       if Ticket.recaptcha_keys_present? && current_user.nil?
         if verify_recaptcha

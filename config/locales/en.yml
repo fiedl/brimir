@@ -13,6 +13,7 @@ en:
   delete: Remove
   close: Close
   wait: Wait
+  to: To
 
   joyride:
     tickets: Anybody can create tickets using this button.
@@ -288,6 +289,8 @@ en:
         locale: Language
         time_zone: Time zone
         per_page: Tickets per page
+        schedule_enabled_false: Always 24/7/365
+        schedule_enabled_true: Work can wait, only during my work hours!
         prefer_plain_text: Send and receive plain text replies
         include_quote_in_reply: Include quote of original message in reply
 
@@ -407,3 +410,4 @@ en:
         notify_client_when_ticket_is_assigned_or_closed: Notify the client when his ticket is assigned or closed.
         notify_client_when_ticket_is_created: Notify the client when his newly created ticket is received.
         notify_user_when_account_is_created: Notify user when account is created.
+        stylesheet_url: Add the path to your own custom stylesheet.

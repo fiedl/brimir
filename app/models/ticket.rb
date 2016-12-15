@@ -123,7 +123,9 @@ class Ticket < ActiveRecord::Base
     users = User.agents_to_notify.select do |user|
       Ability.new(user).can? :show, self
     end
-    self.notified_user_ids = users.map(&:id)
+    self.notified_user_ids = users.map do |user|
+      user.id if user.is_working?
+    end
   end
 
   def is_unread?(user)
