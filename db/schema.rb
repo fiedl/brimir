@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161125141914) do
+ActiveRecord::Schema.define(version: 20161214155109) do
 
   create_table "attachments", force: :cascade do |t|
     t.integer  "attachable_id"
@@ -116,6 +116,20 @@ ActiveRecord::Schema.define(version: 20161125141914) do
     t.datetime "updated_at"
   end
 
+  create_table "schedules", force: :cascade do |t|
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.datetime "start"
+    t.datetime "end"
+    t.boolean  "monday",     default: true,  null: false
+    t.boolean  "tuesday",    default: true,  null: false
+    t.boolean  "wednesday",  default: true,  null: false
+    t.boolean  "thursday",   default: true,  null: false
+    t.boolean  "friday",     default: true,  null: false
+    t.boolean  "saturday",   default: false, null: false
+    t.boolean  "sunday",     default: false, null: false
+  end
+
   create_table "status_changes", force: :cascade do |t|
     t.integer  "ticket_id"
     t.integer  "status",     default: 0, null: false
@@ -142,7 +156,7 @@ ActiveRecord::Schema.define(version: 20161125141914) do
     t.boolean  "notify_user_when_account_is_created",             default: false
     t.boolean  "notify_client_when_ticket_is_created",            default: false
     t.integer  "email_template_id"
-    t.boolean  "ticket_creation_is_open_to_the_world"
+    t.boolean  "ticket_creation_is_open_to_the_world",            default: true
     t.string   "stylesheet_url"
   end
 
@@ -208,9 +222,12 @@ ActiveRecord::Schema.define(version: 20161125141914) do
     t.boolean  "prefer_plain_text",      default: false, null: false
     t.boolean  "include_quote_in_reply", default: true,  null: false
     t.string   "name"
+    t.integer  "schedule_id"
+    t.boolean  "schedule_enabled",       default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["schedule_id"], name: "index_users_on_schedule_id"
 
 end

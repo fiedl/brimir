@@ -46,9 +46,24 @@ class SettingsController < ApplicationController
       :notify_client_when_ticket_is_created,
       :ticket_creation_is_open_to_the_world,
       :stylesheet_url,
+      :always_notify_me,
+      :work_can_wait,
       :include_conversation_in_replies,
       :reply_email_footer,
       :logo_url
     )
+  end
+
+  def month_names
+    @month_names = (1..12).map do |m|
+      I18n.l DateTime.parse(Date::MONTHNAMES[m]),
+          format: "%B"
+    end
+  end
+
+  def day_names
+    @day_names = (1..7).map do |m|
+      I18n.l DateTime.parse(Date::MONTHNAMES[m])
+    end
   end
 end

@@ -19,6 +19,7 @@ gem 'foundation_rails_helper'
 gem 'byebug', group: [:development, :test]
 gem 'pry', group: [:development, :test]
 
+
 group :development do
   # Spring application pre-loader
   gem 'spring'
@@ -33,6 +34,8 @@ group :test do
 
   # for coveralls
   gem 'coveralls'
+
+  gem 'timecop'
 end
 
 # Optional PostgreSQL for production
@@ -72,9 +75,6 @@ gem 'devise-i18n'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.2'
-
-# time traveling
-gem 'timecop'
 
 # fancybox for showing image in lightbox
 gem 'fancybox2-rails', '~> 0.2.8'
