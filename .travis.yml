@@ -15,9 +15,9 @@ env:
   - DB=sqlite3
 
 rvm:
-  - 2.1.10
   - 2.2.5
   - 2.3.1
+  - 2.4.0
 
 before_script:
   - psql -c 'CREATE DATABASE brimir_test;' -U postgres

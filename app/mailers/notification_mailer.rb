@@ -91,6 +91,9 @@ class NotificationMailer < ActionMailer::Base
       headers['Message-ID'] = "<#{ticket.message_id}>"
     end
 
+    # for bounces, we don't use aliases
+    headers['Return-Path'] = Tenant.current_tenant.from
+
     @ticket = ticket
     @user = user
 
@@ -109,7 +112,10 @@ class NotificationMailer < ActionMailer::Base
     else
       @locale = Rails.configuration.i18n.default_locale
     end
-    title = I18n::translate(:new_reply, locale: @locale) + ': ' + reply.ticket.subject
+    title =  reply.ticket.subject
+    if user.agent?
+      title = I18n::translate(:new_reply, locale: @locale) + ': ' + title
+    end
 
     add_attachments(reply)
     add_reference_message_ids(reply)
@@ -118,6 +124,9 @@ class NotificationMailer < ActionMailer::Base
     unless reply.message_id.blank?
       headers['Message-ID'] = "<#{reply.message_id}>"
     end
+
+    # for bounces, we don't use aliases
+    headers['Return-Path'] = Tenant.current_tenant.from
 
     @reply = reply
     @user = user

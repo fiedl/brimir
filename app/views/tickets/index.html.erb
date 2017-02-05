@@ -16,12 +16,12 @@
         <div class="row collapse">
           <% params.delete(:controller) %>
           <% params.delete(:action) %>
-          <%= link_to tickets_path(:csv, params), class: 'radius tiny button right mlm no-m' do %>
+          <%= link_to tickets_path(:csv, permitted_params), class: 'radius tiny button right mlm no-m' do %>
             <i class="fa fa-cloud-download" style="top:1px"></i>
           <% end %>
 
           <% if params[:status] == 'deleted' %>
-            <%= link_to tickets_deleted_path, method: :delete, 'data-confirm' => t(:are_you_sure_empty_trash), class: 'secondary radius tiny button right mlm' do %>
+            <%= link_to tickets_deleted_path, data: { remote: true, method: :delete, confirm: t(:are_you_sure_empty_trash) }, class: 'secondary radius tiny button right mlm' do %>
               <i class="fa fa-bomb" style="top:1px"></i>
             <% end %>
           <% end %>
