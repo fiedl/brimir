@@ -49,8 +49,8 @@ Configuring Captcha's
 If you want to use recaptcha in production you have to go to
 https://www.google.com/recaptcha, create your private and public keys and export these to your production environment, by running:
 
-    export RECAPTCHA_PUBLIC_KEY="[YOUR_KEY]"
-    export RECAPTCHA_PRIVATE_KEY="[YOUR_KEY]"
+    export RECAPTCHA_SITE_KEY="[YOUR_KEY]"
+    export RECAPTCHA_SECRET_KEY="[YOUR_KEY]"
 
 Remove the recaptcha lines from config/secrets.yml if you don't want to use captcha's all together.
 
@@ -97,7 +97,7 @@ Some users have made requests for the following features. If you would like to c
 - Automated replies based on the current rule system.
 - Remove user functionality, without losing ticket and reply information.
 - Adding knowledge base functionality.
-- Set priority, assignee and labels on the create ticket form.
+- Set labels on the create ticket form.
 - Assign tickets to groups of users
 - When replying, select a response from pre-defined canned responses and modify to your needs
 - TicketsController#create should limit access to IP and be user/pass protected
@@ -107,12 +107,10 @@ Some users have made requests for the following features. If you would like to c
 - Ticket search that also searches in from field and replies.
 - Mark tickets as duplicate, linking it to the duplicated ticket.
 - Ability to rename tickets (change their subject).
-- Ability to rename labels.
 - Improve rule form to allow only valid statuses (#150).
 - Timed rules, such as re-assigning when no reply is added withing 24 hours (#203).
 - Desktop notifications using web notifications (#218).
 - Custom ticket statuses, all via database. (#217)
-- Filter on to/cc/bcc without verified addresses. (#227)
 - IMAP or POP3 pull mechanism for new tickets. (#249)
 - Notes field for customer account, to add info about them, such as website url.
 

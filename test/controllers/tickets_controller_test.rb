@@ -57,7 +57,9 @@ class TicketsControllerTest < ActionController::TestCase
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
 
-        post :create, message: @simple_email, format: :json
+        post :create, params: {
+          message: @simple_email, format: :json 
+        }
 
         assert_response :success
       end
@@ -85,10 +87,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count', 1 do
-        post :create, ticket: {
-          from: 'test@test.nl',
-          content: @ticket.content,
-          subject: @ticket.subject,
+        post :create, params: {
+          ticket: {
+            from: 'test@test.nl',
+            content: @ticket.content,
+            subject: @ticket.subject,
+          }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
@@ -104,10 +108,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_no_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_no_difference 'Ticket.count' do
-        post :create, ticket: {
-          from: 'invalid',
-          content: '',
-          subject: '',
+        post :create, params: {
+          ticket: {
+            from: 'invalid',
+            content: '',
+            subject: '',
+          }
         }
 
         assert_response :success
@@ -122,10 +128,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -140,10 +148,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       assert_no_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: { 
+          ticket: {
           from: 'invalid',
           content: '',
           subject: '',
+        }
         }
 
         assert_response :success
@@ -156,28 +166,30 @@ class TicketsControllerTest < ActionController::TestCase
   # FIFTH
   test 'should create ticket when signed in and no captcha' do
     # we need these after the test
-    private_key = Recaptcha.configuration.private_key
-    public_key  = Recaptcha.configuration.public_key
+    secret_key = Recaptcha.configuration.secret_key
+    site_key  = Recaptcha.configuration.site_key
 
     # set blank for this test
-    Recaptcha.configuration.private_key = ''
-    Recaptcha.configuration.public_key = ''
+    Recaptcha.configuration.secret_key = ''
+    Recaptcha.configuration.site_key = ''
     sign_in users(:alice)
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count', 1 do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
       end
 
       # set the configration back to default
-      Recaptcha.configuration.private_key = private_key
-      Recaptcha.configuration.public_key = public_key
+      Recaptcha.configuration.secret_key = secret_key
+      Recaptcha.configuration.site_key = site_key
 
       refute_equal 0, assigns(:ticket).notified_users.count
     end
@@ -186,20 +198,22 @@ class TicketsControllerTest < ActionController::TestCase
   # SIXTH
   test 'should not create ticket when signed in and invalid and no captcha' do
     # we need these after the test
-    private_key = Recaptcha.configuration.private_key
-    public_key  = Recaptcha.configuration.public_key
+    secret_key = Recaptcha.configuration.secret_key
+    site_key  = Recaptcha.configuration.site_key
 
     # set blank for this test
-    Recaptcha.configuration.private_key = ''
-    Recaptcha.configuration.public_key = ''
+    Recaptcha.configuration.secret_key = ''
+    Recaptcha.configuration.site_key = ''
 
     sign_in users(:alice)
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       assert_no_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: { 
+          ticket: {
           from: 'invalid',
           content: '',
           subject: '',
+        }
         }
 
         assert_response :success
@@ -207,8 +221,8 @@ class TicketsControllerTest < ActionController::TestCase
     end
 
     # set the configration back to default
-    Recaptcha.configuration.private_key = private_key
-    Recaptcha.configuration.public_key = public_key
+    Recaptcha.configuration.secret_key = secret_key
+    Recaptcha.configuration.site_key = site_key
 
     assert_equal 0, assigns(:ticket).notified_users.count
   end
@@ -216,19 +230,21 @@ class TicketsControllerTest < ActionController::TestCase
   # SEVENTH
   test 'should create ticket when not signed in and no captcha' do
     # we need these after the test
-    private_key = Recaptcha.configuration.private_key
-    public_key  = Recaptcha.configuration.public_key
+    secret_key = Recaptcha.configuration.secret_key
+    site_key  = Recaptcha.configuration.site_key
 
     # set blank for this test
-    Recaptcha.configuration.private_key = ''
-    Recaptcha.configuration.public_key = ''
+    Recaptcha.configuration.secret_key = ''
+    Recaptcha.configuration.site_key = ''
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count', 1 do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -236,8 +252,8 @@ class TicketsControllerTest < ActionController::TestCase
 
 
       # set the configration back to default
-      Recaptcha.configuration.private_key = private_key
-      Recaptcha.configuration.public_key = public_key
+      Recaptcha.configuration.secret_key = secret_key
+      Recaptcha.configuration.site_key = site_key
 
       refute_equal 0, assigns(:ticket).notified_users.count
     end
@@ -246,19 +262,21 @@ class TicketsControllerTest < ActionController::TestCase
   # EIGHT
   test 'should not create ticket when not signed in and no captcha' do
     # we need these after the test
-    private_key = Recaptcha.configuration.private_key
-    public_key  = Recaptcha.configuration.public_key
+    secret_key = Recaptcha.configuration.secret_key
+    site_key  = Recaptcha.configuration.site_key
 
     # set blank for this test
-    Recaptcha.configuration.private_key = ''
-    Recaptcha.configuration.public_key = ''
+    Recaptcha.configuration.secret_key = ''
+    Recaptcha.configuration.site_key = ''
 
     assert_no_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_no_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'invalid',
           content: '',
           subject: '',
+        }
         }
 
         assert_response :success
@@ -266,8 +284,8 @@ class TicketsControllerTest < ActionController::TestCase
     end
 
     # set the configration back to default
-    Recaptcha.configuration.private_key = private_key
-    Recaptcha.configuration.public_key = public_key
+    Recaptcha.configuration.secret_key = secret_key
+    Recaptcha.configuration.site_key = site_key
     assert_equal 0, assigns(:ticket).notified_users.count
   end
 
@@ -295,11 +313,17 @@ class TicketsControllerTest < ActionController::TestCase
   test 'should notify agent when schedule is nil and ticket is created from MTA' do
     agent = users(:alice)
 
+    agent.schedule = nil
+    agent.save!
+    agent.reload
+
     assert_nil agent.schedule
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, message: @simple_email, format: :json
+        post :create, params: {
+          message: @simple_email, format: :json
+        }
 
         assert_response :success
       end
@@ -320,7 +344,9 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, message: @simple_email, format: :json
+        post :create, params: { 
+          message: @simple_email, format: :json
+        }
 
         assert_response :success
       end
@@ -354,7 +380,9 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, message: @simple_email, format: :json
+        post :create, params: {
+          message: @simple_email, format: :json
+        }
 
         assert_response :success
       end
@@ -388,7 +416,9 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, message: @simple_email, format: :json
+        post :create, params: {
+          message: @simple_email, format: :json
+        }
 
         assert_response :success
       end
@@ -424,15 +454,17 @@ class TicketsControllerTest < ActionController::TestCase
     Timecop.freeze(new_time)
 
     assert_equal new_time, Time.now
-      assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
-        assert_difference 'Ticket.count' do
-          post :create, message: @simple_email, format: :json
+    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
+      assert_difference 'Ticket.count' do
+        post :create, params: {
+          message: @simple_email, format: :json
+        }
 
-          assert_response :success
-        end
+        assert_response :success
       end
+    end
 
-      refute_equal 0, assigns(:ticket).notified_users.count
+    refute_equal 0, assigns(:ticket).notified_users.count
   end
 
   test 'should not notify agent with schedule enabled and time not within range working hours when ticked created from MTA' do
@@ -457,7 +489,9 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
       assert_difference 'Ticket.count' do
-        post :create, message: @simple_email, format: :json
+        post :create, params: {
+          message: @simple_email, format: :json
+        }
 
         assert_response :success
       end
@@ -473,14 +507,20 @@ class TicketsControllerTest < ActionController::TestCase
   test 'should notify agent when schedule is nil when ticket is created' do
     agent = users(:alice)
 
+    agent.schedule = nil
+    agent.save!
+    agent.reload
+
     assert_nil agent.schedule
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -502,10 +542,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -541,10 +583,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -579,10 +623,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -619,19 +665,21 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_equal new_time, Time.now
 
-      assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
-        assert_difference 'Ticket.count' do
-          post :create, ticket: {
-            from: 'test@test.nl',
-            content: @ticket.content,
-            subject: @ticket.subject,
-          }
+    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
+      assert_difference 'Ticket.count' do
+        post :create, params: {
+          ticket: {
+          from: 'test@test.nl',
+          content: @ticket.content,
+          subject: @ticket.subject,
+        }
+        }
 
-          assert_response :success
-        end
+        assert_response :success
       end
+    end
 
-      refute_equal 0, assigns(:ticket).notified_users.count
+    refute_equal 0, assigns(:ticket).notified_users.count
   end
 
   test 'should not notify agent with schedule enabled and time not within range working hours when ticked created' do
@@ -656,10 +704,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_response :success
@@ -676,16 +726,23 @@ class TicketsControllerTest < ActionController::TestCase
   # SCHEDULE NIL
   test 'should notify agent when schedule is nil when ticket is created with logged in agent' do
     agent = users(:alice)
+
+    agent.schedule = nil
+    agent.save!
+    agent.reload
+
     sign_in agent
 
     assert_nil agent.schedule
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
@@ -708,10 +765,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
@@ -748,10 +807,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
@@ -788,10 +849,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
@@ -828,19 +891,21 @@ class TicketsControllerTest < ActionController::TestCase
     Timecop.freeze(new_time)
 
     assert_equal new_time, Time.now
-      assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
-        assert_difference 'Ticket.count' do
-          post :create, ticket: {
-            from: 'test@test.nl',
-            content: @ticket.content,
-            subject: @ticket.subject,
-          }
+    assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
+      assert_difference 'Ticket.count' do
+        post :create, params: {
+          ticket: {
+          from: 'test@test.nl',
+          content: @ticket.content,
+          subject: @ticket.subject,
+        }
+        }
 
         assert_redirected_to ticket_url(assigns(:ticket))
-        end
       end
+    end
 
-      refute_equal 0, assigns(:ticket).notified_users.count
+    refute_equal 0, assigns(:ticket).notified_users.count
   end
 
   test 'should not notify agent with schedule enabled and time not within range working hours when ticked created with logged in agent' do
@@ -866,10 +931,12 @@ class TicketsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', User.agents.count-1 do
       assert_difference 'Ticket.count' do
-        post :create, ticket: {
+        post :create, params: {
+          ticket: {
           from: 'test@test.nl',
           content: @ticket.content,
           subject: @ticket.subject,
+        }
         }
 
         assert_redirected_to ticket_url(assigns(:ticket))
@@ -887,7 +954,7 @@ class TicketsControllerTest < ActionController::TestCase
   test 'should only allow agents to view others tickets' do
     sign_in users(:bob)
 
-    get :show, id: tickets(:multiple)
+    get :show, params: { id: tickets(:multiple) }
     assert_response :unauthorized # redirect to sign in page
   end
 
@@ -910,7 +977,7 @@ class TicketsControllerTest < ActionController::TestCase
   test 'should show ticket' do
     sign_in users(:alice)
 
-    get :show, id: @ticket.id
+    get :show, params: { id: @ticket.id }
     assert_response :success
 
     # should contain this for label adding with javascript
@@ -939,7 +1006,9 @@ class TicketsControllerTest < ActionController::TestCase
     # new assignee should receive notification
     assert_difference 'ActionMailer::Base.deliveries.size' do
 
-      put :update, id: @ticket.id, ticket: { assignee_id: users(:charlie).id }
+      put :update, params: {
+        id: @ticket.id, ticket: { assignee_id: users(:charlie).id }
+      }
       assert_redirected_to ticket_path(@ticket)
 
     end
@@ -955,7 +1024,9 @@ class TicketsControllerTest < ActionController::TestCase
     # assignee should receive notification
     assert_difference 'ActionMailer::Base.deliveries.size' do
 
-      put :update, id: @ticket.id, ticket: { status: 'closed' }
+      put :update, params: {
+        id: @ticket.id, ticket: { status: 'closed' }
+      }
       assert_redirected_to ticket_path(@ticket)
 
     end
@@ -971,7 +1042,9 @@ class TicketsControllerTest < ActionController::TestCase
     # assignee should receive notification
     assert_difference 'ActionMailer::Base.deliveries.size' do
 
-      put :update, id: @ticket.id, ticket: { priority: 'high' }
+      put :update, params: { 
+        id: @ticket.id, ticket: { priority: 'high' }
+      }
       assert_redirected_to ticket_path(@ticket)
 
     end
@@ -988,7 +1061,9 @@ class TicketsControllerTest < ActionController::TestCase
     # new assignee should not receive notification
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
 
-      put :update, id: @ticket.id, ticket: { assignee_id: users(:charlie).id }
+      put :update, params: {
+        id: @ticket.id, ticket: { assignee_id: users(:charlie).id }
+      }
       assert_redirected_to ticket_path(@ticket)
 
     end
@@ -1001,7 +1076,9 @@ class TicketsControllerTest < ActionController::TestCase
     # assignee should not receive notification
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
 
-      put :update, id: @ticket.id, ticket: { status: 'closed' }
+      put :update, params: {
+        id: @ticket.id, ticket: { status: 'closed' }
+      }
       assert_redirected_to ticket_path(@ticket)
 
     end
@@ -1014,7 +1091,9 @@ class TicketsControllerTest < ActionController::TestCase
     # assignee should not receive notification
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
 
-      put :update, id: @ticket.id, ticket: { priority: 'high' }
+      put :update, params: {
+        id: @ticket.id, ticket: { priority: 'high' }
+      }
       assert_redirected_to ticket_path(@ticket)
 
     end
@@ -1059,7 +1138,9 @@ class TicketsControllerTest < ActionController::TestCase
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       assert_difference 'Ticket.count' do
 
-        post :create, message: email, format: :json
+        post :create, params: {
+          message: email, format: :json
+        }
 
         assert_response :success
 
@@ -1073,7 +1154,9 @@ class TicketsControllerTest < ActionController::TestCase
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       assert_no_difference 'Ticket.count' do
 
-        post :create, message: email, format: :json
+        post :create, params: {
+          message: email, format: :json
+        }
 
         assert_response :unprocessable_entity
 
@@ -1095,7 +1178,9 @@ class TicketsControllerTest < ActionController::TestCase
     @ticket.save!
 
     @ticket.reload
-    get :show, id: @ticket.id, format: :eml
+    get :show, params: {
+      id: @ticket.id, format: :eml
+    }
     assert_response :success
   end
 
@@ -1106,7 +1191,9 @@ class TicketsControllerTest < ActionController::TestCase
     @ticket.locked_at = Time.now
     @ticket.save!
 
-    get :show, id: @ticket.id
+    get :show, params: {
+      id: @ticket.id
+    }
     assert_response :success
     assert_match replies(:solution).content, @response.body
   end
@@ -1114,7 +1201,9 @@ class TicketsControllerTest < ActionController::TestCase
   test 'should mark new ticket from MTA as unread for all users' do
     assert_difference 'Ticket.count' do
 
-      post :create, message: @simple_email, format: :json
+      post :create, params: {
+        message: @simple_email, format: :json
+      }
 
       assert_response :success
 
@@ -1125,10 +1214,12 @@ class TicketsControllerTest < ActionController::TestCase
 
   test 'should mark new ticket as unread for all users' do
     assert_difference 'Ticket.count' do
-      post :create, ticket: {
-        from: 'test@test.nl',
-        content: @ticket.content,
-        subject: @ticket.subject,
+      post :create, params: {
+        ticket: {
+          from: 'test@test.nl',
+          content: @ticket.content,
+          subject: @ticket.subject,
+        }
       }
 
       assert_response :success
@@ -1142,7 +1233,9 @@ class TicketsControllerTest < ActionController::TestCase
   test 'should mark new ticket as unread for all users when posted from MTA' do
     assert_difference 'Ticket.count' do
 
-      post :create, message: @simple_email, format: :json
+      post :create, params: {
+        message: @simple_email, format: :json
+      }
 
       assert_response :success
 
@@ -1155,12 +1248,15 @@ class TicketsControllerTest < ActionController::TestCase
     user = users(:alice)
     sign_in user
     ticket = Ticket.last
-    ticket.unread_users << User.all
+    user.unread_tickets << ticket
     assert_difference 'Ticket.last.unread_users.count', -1 do
 
       assert_not_nil ticket.unread_users
+      assert_not_nil user.unread_tickets
 
-      get :show, id: ticket.id
+      get :show, params: {
+        id: ticket.id
+      }
 
       assert_response :success
 
