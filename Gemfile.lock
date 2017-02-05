@@ -46,7 +46,7 @@ GEM
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
     bcrypt (3.1.11)
-    builder (3.2.2)
+    builder (3.2.3)
     byebug (9.0.6)
     cancancan (1.15.0)
     charlock_holmes (0.7.3)
@@ -79,7 +79,7 @@ GEM
       compass (~> 1.0.0)
       sass-rails (< 5.1)
       sprockets (< 4.0)
-    concurrent-ruby (1.0.2)
+    concurrent-ruby (1.0.4)
     connection_pool (2.2.1)
     coveralls (0.8.17)
       json (>= 1.8, < 3)
@@ -100,9 +100,9 @@ GEM
     docile (1.1.5)
     email_reply_parser (0.5.9)
     erubis (2.7.0)
-    exception_notification (4.1.4)
-      actionmailer (~> 4.0)
-      activesupport (~> 4.0)
+    exception_notification (4.2.1)
+      actionmailer (>= 4.0, < 6)
+      activesupport (>= 4.0, < 6)
     execjs (2.7.0)
     extended_email_reply_parser (0.5.0)
       activesupport
@@ -130,7 +130,7 @@ GEM
     gravatar_image_tag (1.2.0)
     hashie (3.4.6)
     http_accept_language (2.1.0)
-    i18n (0.7.0)
+    i18n (0.8.0)
     jbuilder (2.6.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -138,9 +138,9 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    kgio (2.10.0)
     json (2.0.2)
     jwt (1.5.6)
+    kgio (2.10.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     letter_opener (1.4.1)
@@ -153,7 +153,7 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mimemagic (0.3.2)
+    mimemagic (0.3.0)
     mini_portile2 (2.1.0)
     minitest (5.10.1)
     multi_json (1.12.1)
@@ -162,7 +162,7 @@ GEM
     mysql2 (0.4.5)
     net-ldap (0.11)
     nio4r (1.2.1)
-    nokogiri (1.6.8.1)
+    nokogiri (1.7.0.1)
       mini_portile2 (~> 2.1.0)
     oauth2 (1.2.0)
       faraday (>= 0.8, < 0.10)
@@ -212,9 +212,9 @@ GEM
       actionpack (~> 5.x)
       actionview (~> 5.x)
       activesupport (~> 5.x)
-    rails-dom-testing (2.0.1)
+    rails-dom-testing (2.0.2)
       activesupport (>= 4.2.0, < 6.0)
-      nokogiri (~> 1.6.0)
+      nokogiri (~> 1.6)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     rails-i18n (5.0.1)
@@ -279,12 +279,12 @@ GEM
       rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uglifier (3.0.4)
+      execjs (>= 0.3.0, < 3)
     unicorn (5.0.1)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    uglifier (3.0.4)
-      execjs (>= 0.3.0, < 3)
     warden (1.2.6)
       rack (>= 1.0)
     websocket-driver (0.6.4)
@@ -304,35 +304,38 @@ DEPENDENCIES
   devise (~> 4.2)
   devise-i18n (~> 1.1)
   devise_ldap_authenticatable (~> 0.8)
+  exception_notification
   extended_email_reply_parser (>= 0.5.0)
   fancybox2-rails (~> 0.2)
   font-awesome-rails (~> 4.0)
   foundation-rails (~> 5.5.0)
-  foundation_rails_helper
-  gravatar_image_tag
-  http_accept_language
-  jbuilder (~> 2.2)
-  jquery-rails
-  letter_opener
+  foundation_rails_helper (~> 2.0)
+  gravatar_image_tag (~> 1.2)
+  http_accept_language (~> 2.1)
+  jbuilder (~> 2.6)
+  jquery-rails (~> 4.2)
+  letter_opener (~> 1.4)
+  mail
   mysql2
-  omniauth-google-oauth2
-  paperclip
-  pry
-  rails (~> 4.2.0)
-  rails-i18n
-  rake
-  react-rails
-  recaptcha
+  omniauth-google-oauth2 (~> 0.4)
+  paperclip (~> 5.1)
+  pry (~> 0.10)
+  rails (~> 5.0.0)
+  rails-controller-testing
+  rails-i18n (~> 5.0)
+  rake (~> 12.0)
+  react-rails (~> 1.10)
+  recaptcha (~> 4.0)
   rinku
   sass-rails (~> 5.0.0)
   select2-rails (~> 3.5)
-  spring
+  spring (~> 2.0)
   sqlite3
-  timecop
-  trix
-  uglifier (>= 1.0.3)
+  timecop (~> 0.8)
+  trix (~> 0.10, >= 0.10.1)
+  uglifier (~> 3.0.0)
   unicorn
-  will_paginate
+  will_paginate (~> 3.1)
 
 BUNDLED WITH
    1.13.7
