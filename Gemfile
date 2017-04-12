@@ -109,4 +109,4 @@ end
 gem 'rinku', require: 'rails_rinku'
 
 # parse emails
-gem 'extended_email_reply_parser', '>= 0.5.0' # github: 'fiedl/extended_email_reply_parser'
+gem 'extended_email_reply_parser', '>= 0.5.1' # github: 'fiedl/extended_email_reply_parser'
