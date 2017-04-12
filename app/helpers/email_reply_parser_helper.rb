@@ -14,7 +14,7 @@ module EmailReplyParserHelper
         pre_and_wrap email_reply_parser ticket_or_reply.content
       end
     elsif ticket_or_reply.content_type == 'html'
-      sanitize_html ticket_or_reply.content, ticket_or_reply.inline_files
+      sanitize_html email_reply_parser(ticket_or_reply.content), ticket_or_reply.inline_files
     else
       raise 'Case not handled, yet.'
     end
