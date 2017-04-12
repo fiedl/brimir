@@ -13,6 +13,7 @@ gem 'compass-rails', '~> 3.0.0'
 gem 'foundation-rails', '~> 5.5.0'
 
 gem 'jquery-rails', "~> 4.2"
+gem 'jquery-visibility-rails'
 
 # foundation form errors
 gem 'foundation_rails_helper', "~> 2.0"
@@ -99,11 +100,18 @@ gem 'trix', "~> 0.10", ">= 0.10.1"
 # React support
 gem 'react-rails', "~> 1.10"
 
+# Capistrano for deployment
+group :development do
+  gem 'capistrano', '~> 3.8'
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+end
+
 # bring back auto_link
 gem 'rinku', require: 'rails_rinku'
 
 # parse emails
-gem 'extended_email_reply_parser', '>= 0.5.0' # github: 'fiedl/extended_email_reply_parser'
+gem 'extended_email_reply_parser', '>= 0.5.1' # github: 'fiedl/extended_email_reply_parser'
 
 # exception notification via email
 gem 'exception_notification'
