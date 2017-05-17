@@ -56,7 +56,7 @@ gem 'devise', "~> 4.2"
 gem 'devise_ldap_authenticatable', "~> 0.8"
 
 # mail see https://github.com/mikel/mail/issues/912
-gem 'mail', '>= 2.6.6.rc1' # https://gemnasium.com/github.com/fiedl/brimir/alerts#advisory_309
+gem 'mail', '~> 2.6.4'
 
 # omniauth
 gem 'omniauth-google-oauth2', "~> 0.4"
