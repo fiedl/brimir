@@ -205,6 +205,9 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-remote (0.1.8)
+      pry (~> 0.9)
+      slop (~> 3.0)
     public_suffix (2.0.4)
     rack (2.0.1)
     rack-test (0.6.3)
@@ -334,6 +337,7 @@ DEPENDENCIES
   omniauth-google-oauth2 (~> 0.4)
   paperclip (~> 5.1)
   pry (~> 0.10)
+  pry-remote
   rails (~> 5.0.0)
   rails-controller-testing
   rails-i18n (~> 5.0)
