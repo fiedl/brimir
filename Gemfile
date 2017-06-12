@@ -21,6 +21,7 @@ gem 'foundation_rails_helper', "~> 2.0"
 # to use debugger
 gem 'byebug', "~> 9.0", group: [:development, :test]
 gem 'pry', "~> 0.10", group: [:development, :test]
+gem 'pry-remote', group: [:development]
 
 # We need this to not break the test suite as `assigns` and `assert_template` have been remove and extracted to a gem in Rails 5
 gem 'rails-controller-testing', group: [:test]
