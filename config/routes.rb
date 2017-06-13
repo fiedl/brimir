@@ -31,6 +31,7 @@ Brimir::Application.routes.draw do
   resources :attachments, only: [:index, :new]
 
   resources :email_addresses
+  resources :email_imports, only: [:new, :create]
 
   resource :settings, only: [:edit, :update]
 
