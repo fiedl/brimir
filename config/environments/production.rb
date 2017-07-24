@@ -106,7 +106,7 @@ Rails.application.configure do
     protocol: Rails.application.secrets.url_options_protocol
   }
 
-  config.action_controller.asset_host = "//#{Rails.application.secrets.url_options_host}"
-  config.action_mailer.asset_host = "//#{Rails.application.secrets.url_options_host}"
+  config.action_controller.asset_host = "#{Rails.application.secrets.url_options_protocol}://#{Rails.application.secrets.url_options_host}"
+  config.action_mailer.asset_host = "#{Rails.application.secrets.url_options_protocol}://#{Rails.application.secrets.url_options_host}"
 
 end
