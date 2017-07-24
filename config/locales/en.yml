@@ -164,11 +164,13 @@ en:
   your_ticket_has_been_closed: "Your support ticket has been closed. If the issue is not resolved, yet, please feel free to reply. For new requests, please send a separate email."
   str_is_working_on_your_ticket: "%{str} will handle your support ticket."
   show_full_message: Show full message
+  show_ticket_in_brimir: Show ticket in Brimir
 
 # notificantion_mailer/new_account
   new_account_subject: 'Welcome to Brimir!'
 
 # attachments/_attachment
+  attachments: Attachments
   download: download
 
 # users/new

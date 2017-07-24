@@ -1,13 +1,19 @@
 <style>
   .reply_body { background-color: white; border: 1px solid #DBDBDB; -webkit-border-radius: 3px; border-radius: 3px; display: block; margin: 6px 0; padding: 10px 12px 0 12px; margin-right: 40px }
   img.avatar { -webkit-border-radius: 3px; border-radius: 3px; }
-  .show_full_message { text-align: right; font-size: 80%; margin-right: 40px }
+  .show_full_message, .show-ticket-online { text-align: right; font-size: 80%; margin-right: 40px }
+  .show-ticket-online { margin-top: -10px; margin-bottom: -10px; }
+  .attachments { margin: 10px 0px; font-size: 85%; }
+  .attachments ul { list-style: none; }
 </style>
 <div style="font-family: Helvetica; background-color: #F0F0F0">
   <div class="header" style="background-color: #337ab7; color: #ffffff; margin-top: 0; margin-left: 0; margin-right: 0; margin-bottom: 20px; padding: 20px;">
     <%= image_tag Tenant.current_tenant.logo_url, align: 'right' if Tenant.current_tenant.logo_url.present? %>
     <p><%= @user.greeting %>!</p>
     <p><%= @title %></p>
+  </div>
+  <div class="show-ticket-online">
+    <%= link_to t(:show_ticket_in_brimir), ticket_url(@ticket) %>
   </div>
   <ul>
     <% @replies.each do |reply| %>
@@ -29,6 +35,16 @@
               <p>
                 <%= parse_email_reply(reply) %>
               </p>
+              <% if reply.attachments.any? %>
+                <div class="attachments">
+                  <%= "#{t(:attachments)}:" %>
+                  <ul>
+                    <% reply.attachments.each do |attachment| %>
+                      <li><%= link_to attachment.file_file_name, asset_url(attachment.file.url) %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
             </div>
             <div class="show_full_message">
               <%= link_to t(:show_full_message), reply_url(reply, format: :eml) if reply.raw_message_file_size.to_i > 0 %>
@@ -51,6 +67,16 @@
             <p>
               <%= parse_email_reply @ticket %>
             </p>
+            <% if @ticket.attachments.any? %>
+              <div class="attachments">
+                <%= "#{t(:attachments)}:" %>
+                <ul>
+                  <% @ticket.attachments.each do |attachment| %>
+                    <li><%= link_to attachment.file_file_name, asset_url(attachment.file.url) %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
           </div>
           <div class="show_full_message">
             <%= link_to t(:show_full_message), ticket_url(@ticket, format: :eml) if @ticket.raw_message_file_size.to_i > 0 %>
