@@ -150,6 +150,7 @@ de:
   your_ticket_has_been_closed: 'Dein Support-Ticket wurde geschlossen. Wenn das Problem noch nicht gelöst wurde, antworte einfach auf diese Nachricht. Für neue Anliegen schreibe bitte eine separate E-Mail. Danke!'
   str_is_working_on_your_ticket: "Dein Anliegen wird jetzt von %{str} bearbeitet."
   show_full_message: Vollständige Nachricht anzeigen
+  show_ticket_in_brimir: Ticket in Brimir anzeigen
 
 # attachments/_attachment
   attachments: Anhänge
