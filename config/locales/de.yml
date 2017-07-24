@@ -152,6 +152,7 @@ de:
   show_full_message: Vollständige Nachricht anzeigen
 
 # attachments/_attachment
+  attachments: Anhänge
   download: Öffnen
 
 # users/new

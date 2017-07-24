@@ -163,6 +163,7 @@ en:
   new_account_subject: 'Welcome to Brimir!'
 
 # attachments/_attachment
+  attachments: Attachments
   download: download
 
 # users/new
