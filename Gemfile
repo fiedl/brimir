@@ -116,3 +116,5 @@ gem 'extended_email_reply_parser', '>= 0.5.1' # github: 'fiedl/extended_email_re
 
 # exception notification via email
 gem 'exception_notification'
+
+gem 'nokogiri', '>= 1.8.1'
