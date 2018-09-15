@@ -53,7 +53,7 @@ gem 'mysql2', group: :production
 gem 'sqlite3', group: [:development, :test]
 
 # authentication
-gem 'devise', "~> 4.2"
+gem 'devise', "~> 4.4"
 gem 'devise_ldap_authenticatable', "~> 0.8"
 
 # mail see https://github.com/mikel/mail/issues/912
