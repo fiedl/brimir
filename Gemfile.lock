@@ -367,7 +367,7 @@ DEPENDENCIES
   sass-rails (~> 5.0.0)
   select2-rails (~> 3.5)
   spring (~> 2.0)
-  sqlite3 (~> 1.3)
+  sqlite3
   therubyracer
   timecop (~> 0.8)
   trix (~> 0.10, >= 0.10.1)
