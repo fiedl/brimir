@@ -10,7 +10,7 @@ class StatusReply < Reply
   def self.create_from_assignment(ticket, current_user)
     message = I18n.t(:str_is_working_on_your_ticket, str: ticket.assignee.name, locale: ticket.user.locale)
     reply = create_from_status_message message, ticket, current_user
-    reply.notified_users += [tiket.assignee]
+    reply.notified_users += [ticket.assignee]
     return reply
   end
 
