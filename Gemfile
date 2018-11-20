@@ -16,6 +16,9 @@ gem 'jquery-visibility-rails'
 # foundation form errors
 gem 'foundation_rails_helper', "~> 2.0"
 
+# js runtime
+gem 'therubyracer'
+
 # to use debugger
 gem 'byebug', "~> 9.0", group: [:development, :test]
 gem 'pry', "~> 0.10", group: [:development, :test]
