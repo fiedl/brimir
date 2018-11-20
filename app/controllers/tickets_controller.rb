@@ -103,10 +103,10 @@ class TicketsController < ApplicationController
         # assignee set and not same as user who modifies
         if !@ticket.assignee.nil? && @ticket.assignee.id != current_user.id
 
-          if @ticket.previous_changes.include? :assignee_id
+          if @ticket.previous_changes.include?(:assignee_id) && !@tenant.notify_client_when_ticket_is_assigned_or_closed
             NotificationMailer.assigned(@ticket).deliver_now
 
-          elsif @ticket.previous_changes.include? :status
+          elsif @ticket.previous_changes.include?(:status) && !@tenant.notify_client_when_ticket_is_assigned_or_closed
             NotificationMailer.status_changed(@ticket).deliver_now
 
           elsif @ticket.previous_changes.include? :priority
@@ -178,7 +178,7 @@ class TicketsController < ApplicationController
       using_hook = false
       @ticket = Ticket.new(ticket_params)
     end
-    
+
     # Fiedl: Quick fix since the content type isn't always detected correctly.
     @ticket.content_type = 'html' if @ticket && @ticket.content && (@ticket.content.include?("<p>") or @ticket.content.include?("<html>"))
 
