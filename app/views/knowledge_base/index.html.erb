@@ -1,0 +1,5 @@
+<div class="knowledge_base">
+  <% @labels.each do |label| %>
+    <%= render partial: 'knowledge_base/article', object: label, as: :label %>
+  <% end %>
+</div>

@@ -4,6 +4,7 @@ de:
 
 # helpers
   time_ago_as_phrase: "%{timespan} alt"
+  edit: Bearbeiten
 
 # layouts/application
   new_ticket: Neues Ticket
@@ -73,6 +74,7 @@ de:
   are_you_sure_empty_trash: Papierkorb wirklich leeren?
   locked_by_user: 'Das Ticket wird derzeit von %{user} bearbeitet.'
   ticket_id_created_by_at: '#%{id} erstellt von %{user} am %{at}'
+  this_label_has_no_knowledge_base_article_yet: "Dieses Tag hat noch keinen Knowledge-Base-Artikel."
 
 # tickets create
   create_ticket: Ticket erstellen

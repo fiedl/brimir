@@ -91,6 +91,8 @@ class TicketsController < ApplicationController
       @tickets = @tickets.where.not(status: Ticket.statuses[:merged])
     end
 
+    @label = Label.find(params[:label_id]) if params[:label_id]
+
     respond_to do |format|
       format.html do
         @tickets = @tickets.paginate(page: params[:page],
