@@ -31,7 +31,7 @@ module Tickets
         ticket.update_attributes(ticket_params)
       end
 
-      redirect_to :back, notice: t(:tickets_status_modified)
+      redirect_back fallback_location: tickets_url, notice: t(:tickets_status_modified)
     end
 
     protected
@@ -51,9 +51,10 @@ module Tickets
 
       unless @tickets.count == 0
         merged_ticket = Ticket.merge @tickets, current_user: current_user
+        redirect_to merged_ticket, notice: t(:tickets_have_been_merged)
+      else
+        redirect_back fallback_location: tickets_url, notice: t(:tickets_status_modified)
       end
-      redirect_to merged_ticket, notice: t(:tickets_have_been_merged)
     end
   end
 end
-

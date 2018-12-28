@@ -41,6 +41,12 @@ class LabelsController < ApplicationController
     respond_to :js
   end
 
+  def edit_email_template
+    @label = Label.find params[:label_id]
+    template = EmailTemplate.find_or_create_by name: @label.name, kind: :canned_reply
+    redirect_to edit_email_template_path(template)
+  end
+
   def index
     @labels = Label.viewable_by(current_user).where('name LIKE ?', "#{params[:q]}%")
     respond_to :json

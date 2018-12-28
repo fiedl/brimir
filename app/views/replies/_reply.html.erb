@@ -1,4 +1,4 @@
-<ul class="accordion <%= 'internal-reply' if reply.internal? %> <%= 'status-reply' if reply.kind_of?(StatusReply) %>" data-accordion>
+<ul class="accordion <%= 'internal-reply' if reply.internal? %> <%= 'status-reply' if reply.kind_of?(StatusReply) %> <%= 'knowledge-base-reply' if reply.kind_of?(KnowledgeBaseReply) %>" data-accordion>
   <li class="accordion-navigation <%= div_class %>">
     <% if reply.is_a? SystemReply %>
       <a href="#reply-<%=reply.id%>" class="bb text-default">
@@ -10,8 +10,7 @@
             <span><%= t(:reply_by) %> <strong><%= reply.ticket.reply_from_address %></strong></span>
             <span class="right" title="<%= l reply.created_at.in_time_zone(current_user.time_zone), format: :long %>">
               <i class="fa fa-clock-o"></i>
-              <%= time_ago_in_words(reply.created_at.in_time_zone(current_user.time_zone)) %>
-              <%= t(:ago) %>
+              <%= time_ago_as_phrase(reply.created_at.in_time_zone(current_user.time_zone)) %>
             </span>
           </div>
         </div>
@@ -29,8 +28,7 @@
               <i class="fa fa-paperclip"></i>
             <% end %>
               <i class="fa fa-clock-o"></i>
-              <%= time_ago_in_words(reply.created_at.in_time_zone(current_user.time_zone)) %>
-              <%= t(:ago) %>
+              <%= time_ago_as_phrase(reply.created_at.in_time_zone(current_user.time_zone)) %>
             </span>
           </div>
         </div>
@@ -43,6 +41,7 @@
         <% if reply.raw_message_file_size.to_i > 0 %>
           <a class="pull-right text-default" href="<%= reply_path(reply, format: :eml) %>"><%= fa_icon 'save' %></a>
         <% end %>
+
         <% if can?(:split_off, reply) && !reply.kind_of?(StatusReply) %>
           <%= link_to reply_split_off_path(reply_id: reply.id), method: 'post', class: 'pull-right text-default split-off-ticket' do %>
             <i class="fa fa-code-fork"></i>

@@ -1,14 +1,19 @@
 # author: https://www.facebook.com/aunsinpagina & daniel.seijo_at_urbincasa.es
 # revisions: http://colina.net.ve e1th0r
-# 
+#
 es:
   language_name: Español
+
+# helpers
+  time_ago_as_phrase: "hace %{timespan}"
+
 # layouts/application
   new_ticket: Nuevo Ticket
   inbox: Bandeja
-  mine: Mios
+  my_tickets: Mios
+  waiting_tickets: En espera
   closed_tickets: Cerrados
-  trashed: Borrados
+  trashed_tickets: Borrados
 
 # devise/sessions/new
   sign_in: Entrar Brimir
@@ -23,7 +28,7 @@ es:
   change_password: Cambiar contraseña
   new_password: Nueva contraseña
   new_password_confirmation: Confirmar nueva contraseña
-  
+
 # devise/mailer/reset_password_instructions
   hello: Hola
   someone_requested_link: Alguien ha solicitado un enlace para cambiar tu contraseña, puedes proceder haciendo click en el siguiente enlace.
@@ -39,6 +44,9 @@ es:
   search: Buscar
   minutes: minutos
 
+# tickets create
+  create_ticket: Crear ticket
+
 # tickets/show
   ticket_by_at: Por %{email} en %{at}
   no_content: Sin contenido
@@ -47,10 +55,6 @@ es:
   num_replies:
     one: '%{count} respuesta'
     other: '%{count} respuestas'
-  high: Alta
-  medium: Media
-  low: Baja
-  unknown: Desconocido
   labels: Etiquetas
   label_name: Nombre de etiqueta
   notification_sent_to: 'Las notificaciones fueron enviadas a las siguientes direcciones:'
@@ -76,20 +80,21 @@ es:
   on_date_author_wrote: 'En %{date}, %{author} escribió:'
 
 # ticket_mailer/notify_assigned.text.erb
-  ticket_assigned: Te asignaron un Ticket
-
-# ticket_mailer/notify_priority_changed.text.erb
-  ticket_priority_changed: Prioridad del ticket modificada
+  ticket_assigned: Te asignaron un ticket
 
 # ticket_mailer/notify_status_changed.text.erb
-  ticket_status_modified: Estado del ticket modificado
+  tickets_status_modified: Estado de los tickets modificado
 
-# notification_mailer/new_ticket
-  view_new_ticket: Ver nuevo ticket
+# notification_mailer
+  view_ticket: Ver ticket
+
 # notification_mailer/new_reply
   new_reply: Nueva respuesta
-  view_new_reply: Ver nueva respuesta
-  
+  view_reply: Ver respuesta
+
+# notification_mailer/priority_changed,status_changed
+  attribute_changed: "Ticket %{attribute} modificado a %{value}"
+
 # attachments/_attachment
   download: Descargar
 
@@ -110,6 +115,7 @@ es:
   only_fill_in_passwords_when_modifying: Rellena solo los siguientes dos campos si deseas modificar tu contraseña.
   user_is_an_agent: El usuario es un agente
   receive_new_ticket_notifications: Recibir notificaciones para nuevos tickets
+  until: hasta
   email_settings: Configuración de Correo
   save: Guardar
   access_control: Control de Acceso
@@ -144,10 +150,15 @@ es:
         content: Contenido
         status: Estado
         statuses:
-          open: Abierto
-          closed: Cerrado
-          deleted: Borrado
-          waiting: En espera
+          open: abierto
+          closed: cerrado
+          deleted: borrado
+          waiting: en espera
+        priorities:
+          unknown: desconocido
+          low: baja
+          medium: media
+          high: alta
         priority: Prioridad
         assignee_id: Delegado
       rule:
@@ -170,7 +181,6 @@ es:
 
 
   add: Añadir
-  ago: hace
   are_you_sure: ¿Estás seguro?
   count_tickets:
     one: '%{count} ticket'
@@ -197,6 +207,7 @@ es:
   new_rule: Nueva regla
   no_notifications_sent: 'Ninguna notificación ha sido enviada'
   notification_will_be_sent_to: Tus notificaciones serán enviadas a
+  canned_reply: Respuesta preparada
   personal_settings: Configuración personal
   rule_added: Regla añadida
   rule_modified: Regla modificada

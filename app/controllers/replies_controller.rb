@@ -15,10 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class RepliesController < ApplicationController
+  include TimeHelper
 
   load_and_authorize_resource
 
   def new
+    @users = User.actives
+    @users = @users.agents if @reply.internal?
     @reply.assign_attributes(reply_params)
   end
 
@@ -80,15 +83,17 @@ class RepliesController < ApplicationController
           @reply.notification_mails.each(&:deliver_now)
         end
 
-        redirect_to @reply.ticket, notice: I18n::translate(:reply_added)
+        redirect_to tickets_url, notice: I18n::translate(:reply_added)
       end
-    #rescue => e
-    #  Rails.logger.error 'Exception occured on Reply transaction!'
-    #  Rails.logger.error "Message: #{e.message}"
-    #  Rails.logger.error "Backtrace: #{e.backtrace.join("\n")}"
-    #  @outgoing_addresses = EmailAddress.verified.ordered
-    #  render action: 'new'
-    #end
+    # rescue => e
+    #   Rails.logger.error 'Exception occured on Reply transaction!'
+    #   Rails.logger.error "Message: #{e.message}"
+    #   Rails.logger.error "Backtrace: #{e.backtrace.join("\n")}"
+    #   @outgoing_addresses = EmailAddress.verified.ordered
+    #   @users = User.actives
+    #   @users = @users.agents if @reply.internal?
+    #   render 'new'
+    # end
     #
     # # The above raises: An ActionView::MissingTemplate occurred in replies#create:
     # # Missing template replies/new

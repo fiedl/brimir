@@ -66,6 +66,10 @@ table thead tr th{
 
 /* --- Uncategorized --- */
 
+.user-signed-in {
+  background: #30363e;
+}
+
 .label{
 	text-transform: uppercase;
 }
@@ -184,3 +188,8 @@ pre {
 .status-reply li > a, .status-reply .row {
 	background-color: #eaeef0 !important;
 }
+
+.knowledge-base-reply li > a, .knowledge-base-reply .row {
+	background-color: #a0dffd !important;
+}
+
