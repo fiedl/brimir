@@ -26,6 +26,8 @@ Brimir::Application.routes.draw do
   resources :rules
 
   resources :email_templates
+  get :knowledge_base, to: 'knowledge_base#index'
+  get :knowledgebase, to: 'knowledge_base#index'
 
   resources :labels, only: [:destroy, :update, :index, :edit] do
     get :edit_email_template, to: 'labels#edit_email_template'

@@ -1,0 +1,9 @@
+<div class="panel radius">
+  <h4><%= label.name %> <%= render label %></h4>
+  <p>
+    <%= ((template = EmailTemplate.find_by(name: label.name)).try(:message) || t(:this_label_has_no_knowledge_base_article_yet)).to_s.html_safe %>
+    <% if can? :edit, template %>
+      <%= link_to t(:edit), label_edit_email_template_path(label) %>
+    <% end %>
+  </p>
+</div>

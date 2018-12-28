@@ -25,6 +25,7 @@ class Ability
     can :create, Attachment
     can :update, Reply, user_id: user.id
     can :update, Reply, user_id: nil
+    can :index, :knowledge_base
 
     if user.agent?
       if user.labelings.count > 0

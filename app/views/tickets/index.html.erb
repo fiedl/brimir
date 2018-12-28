@@ -1,3 +1,9 @@
+<% if @label %>
+  <div class="knowledge_base">
+    <%= render partial: 'knowledge_base/article', object: @label, as: :label %>
+  </div>
+<% end %>
+
 <div class="panel pam no-bt">
   <div class="row collapse">
     <div class="medium-6 columns">
