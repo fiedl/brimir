@@ -37,6 +37,17 @@
         </div>
       </div>
 
+      <% if (@canned_replies = EmailTemplate.canned_replies.order(:name)).any? %>
+        <div class="row collapse mbl">
+          <div class="medium-4 columns">
+            <label><%= t(:canned_reply) %></label>
+          </div>
+          <div class="medium-8 columns">
+            <%= render 'replies/canned_replies' %>
+          </div>
+        </div>
+      <% end %>
+
       <%
         if @reply.content.blank? && @reply.errors.count == 0 # not on reply error view
 

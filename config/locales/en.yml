@@ -1,11 +1,17 @@
+# primary language - use it as template for other locales
 en:
   language_name: English
+
+# helpers
+  time_ago_as_phrase: "%{timespan} ago"
+
 # layouts/application
   new_ticket: New ticket
   inbox: Inbox
-  mine: Mine
+  my_tickets: My tickets
+  waiting_tickets: Waiting
   closed_tickets: Closed
-  trashed: Trashed
+  trashed_tickets: Trash
   users: Users
   rules: Rules
   personal_settings: Personal settings
@@ -14,20 +20,21 @@ en:
   close: Close
   wait: Wait
   to: To
+  inactive: Inactive
 
   joyride:
     tickets: Anybody can create tickets using this button.
-    personal_settings: Set your signature, timezone and other preferences via this menu.
-    labels: After adding labels to tickets or users, they will show up here. You can then use them as filters. New labels can be created on a ticket page.
+    personal_settings: Set your signature, timezone and other preferences by use of this menu.
+    labels: After adding tags to tickets or users, they will show up here and you can then use them as filters. New tags can be created on any ticket page.
     rules: Automatically add labels, assignees, change status and more.
     users: Add more agents or normal users.
     final: Thanks for using Brimir!
     next: Next
     previous: Previous
-    end: Let's start!
+    end: Let's go!
 
 # devise/sessions/new
-  sign_in: Sign into Brimir
+  sign_in: Sign in
 
 # devise/shared/links
   forgot_password: Forgot your password?
@@ -38,7 +45,7 @@ en:
 # devise/passwords/edit
   change_password: Change password
   new_password: New password
-  new_password_confirmation: Confirm new password
+  new_password_confirmation: Repeat new password
 
 # devise/mailer/reset_password_instructions
   hello: Hello
@@ -48,9 +55,11 @@ en:
 
 # tickets/index
   count_tickets:
+    zero: 'No tickets'
     one: '%{count} ticket'
     other: '%{count} tickets'
   count_tickets_containing:
+    zero: 'No tickets containing'
     one: '%{count} ticket containing'
     other: '%{count} tickets containing'
   priority: Priority
@@ -65,6 +74,9 @@ en:
   locked_by_user: Ticket currently being handled by %{user}
   ticket_id_created_by_at: '#%{id} created by %{user} at %{at}'
 
+# tickets create
+  create_ticket: Create Ticket
+
 # tickets/show
   add: Add
   ticket_by_at: By %{email} on %{at}
@@ -74,13 +86,9 @@ en:
   status: Status
   assignee: Assignee
   num_replies:
+    zero: 'no replies'
     one: '%{count} reply'
     other: '%{count} replies'
-  ago: ago
-  high: High
-  medium: Medium
-  low: Low
-  unknown: Unknown
   labels: Labels
   label_name: Label name
   notification_sent_to: 'A notification was sent to the following addresses:'
@@ -101,7 +109,7 @@ en:
   assign: Assign
 
 # tickets/_change_subject_form
-  change_subject: Rename subject
+  change_subject: Rename ticket
   str1_has_renamed_ticket_from_str2_to_str3: "%{str1} has renamed the ticket from '%{str2}' to '%{str3}'."
 
 # tickets/locks/create
@@ -115,7 +123,7 @@ en:
 
 # email_imports/new
   import_emails: Import emails
-  upload_eml_files_to_import_them_as_new_tickets: "Upload eml files here in order to import them as new tickets."
+  upload_eml_files_to_import_them_as_new_tickets: "Upload *.eml files here in order to import them as new tickets."
   upload_files: Upload files
   perform_email_import: Perform email import
 
@@ -130,6 +138,7 @@ en:
   attach_note: Attach note
   on_date_author_wrote: 'On %{date}, %{author} wrote:'
   notification_will_be_sent_to: Your notification will be sent to
+  canned_reply: Canned reply
   save_as_draft: Save as draft
   internal_note: Internal note
 
@@ -140,21 +149,19 @@ en:
 # ticket_mailer/notify_assigned.text.erb
   ticket_assigned: Ticket assigned to you
 
-# ticket_mailer/notify_priority_changed.text.erb
-  ticket_priority_changed: Ticket priority modified for ticket
-
 # ticket_mailer/notify_status_changed.text.erb
-  ticket_status_modified: Ticket status modified for ticket
-  tickets_status_modified: Ticket status modified for tickets
+  tickets_status_modified: Status of tickets modified.
 
-# notification_mailer/new_ticket
-  view_new_ticket: View new ticket
+# notification_mailer
+  view_ticket: View ticket
+
 # notification_mailer/new_reply
   new_reply: New reply
   view_new_reply: View new reply
   good_morning: Good morning
   good_day: Good day
   good_evening: Good evening
+  view_reply: View reply
   your_ticket_has_been_closed: "Your support ticket has been closed. If the issue is not resolved, yet, please feel free to reply. For new requests, please send a separate email."
   str_is_working_on_your_ticket: "%{str} will handle your support ticket."
   show_full_message: Show full message
@@ -162,6 +169,9 @@ en:
 
 # notificantion_mailer/new_account
   new_account_subject: 'Welcome to Brimir!'
+
+# notification_mailer/priority_changed,status_changed
+  attribute_changed: "Ticket %{attribute} changed to %{value}"
 
 # attachments/_attachment
   attachments: Attachments
@@ -173,7 +183,7 @@ en:
 # users/edit
   edit_user: Edit User
   omniauth_connect_title: Authentication using Google
-  omniauth_connect_text: Activate authentication using a Google Account. Afterwards you can use "Sign in with Google" as an alternative to the default email address and password login.
+  omniauth_connect_text: Activate authentication using a Google Account. Afterwards, you can use "sign in with Google" as an alternative to the default email address and password login.
   omniauth_connect_google_text: Connect with Google
   remove_user: Remove user
 
@@ -188,8 +198,11 @@ en:
   account_settings: Account Settings
   only_fill_in_passwords_when_modifying: Only fill in these two fields if you want to modify your password.
   user_is_an_agent: User is an agent
-  receive_new_ticket_notifications: Receive notifications for new tickets
+  active: User is active
+  until: until
+  receive_new_ticket_notifications: Receive notifications for new tickets.
   email_settings: Email Settings
+  signature: Signature
   save: Save
   access_control: Access Control
   have_access_to_label: User has access to all tickets with any of these labels.
@@ -209,28 +222,27 @@ en:
   file_not_found: File not found
 
 # controllers/users
-  settings_saved: Settings saved
   user_added: User added
   user_removed: User removed
 
 # controllers/tickets
   ticket_added: Ticket added
-  ticket_added_public: Your enquiry has been sent to the relevant service who will get back to you as soon as possible
-  form_validation_error: Malformed form. Please fill the form correctly
-  captcha_error: Please solve the captcha first
+  ticket_added_public: Your enquiry has been sent to the relevant service who will get back to you as soon as possible.
+  form_validation_error: Malformed form. Please fill the form correctly.
+  captcha_error: Please solve the captcha first.
   ticket_updated: Ticket updated
   access_denied: Access denied
 
 # controllers/tickets/deleted
-  trash_emptied: All tickets were deleted from the trash
+  trash_emptied: All tickets were deleted from the trash.
 
 # controllers/replies
   reply_added: Reply added
   draft_saved: Draft saved
 
 # controllers/omniauth
-  already_linked_accounts: Already linked with Google Account
-  successfully_linked_account: Successfully linked with Google Account
+  already_linked_accounts: Already linked with Google Account.
+  successfully_linked_account: Successfully linked with Google Account.
   not_linked_account_cant_login: There is no user attached to this provider yet. Please sign in first and connect through the personal settings screen.
   third_party_failure: An error occured during authentication. Did you enable "Contacts API" and "Google+ API" via the Google API console?
 
@@ -252,18 +264,18 @@ en:
   rule_deleted: Rule deleted
 
 # email_addresses/index
-  new_email_address: New outgoing email address
-  email_addresses: Email addresses for outgoing email
+  new_email_address: New email address
+  email_addresses: Email addresses for outgoing messages
 
 # email_addresses/edit
   modify_email_address: Modify outgoing email address
 
 # email_addresses/new
-  verification_mail_will_be_sent: Make sure this email address is forwarded correctly to Brimir. An automated verification email will be sent when you click save. Only verified email addresses can be used for outgoing mail.
-  mark_spam_spf: Brimir mails might be marked as spam when you don't add this server to the SPF DNS record of the above mail address.
+  verification_mail_will_be_sent: In order to verify this email address is forwarded correctly, an automated verification message will be sent when you click "save". Only verified email addresses can be used for outgoing mail.
+  mark_spam_spf: Outgoing mails may be marked as spam if you don't add a DNS record of type SPF to the domain name of the above email address.
 
 # email_templates/index
-  already_active_template: There is already an active template for a %{kind} email, setting this option will unset the now active template.
+  already_active_template: There is already an active template for %{kind}, setting this option will unset the currently active template.
   new_email_template: New email template
   email_templates: Email templates
   deleting_this_item_will_unset_option: 'Deleting this template will unset the following option:'
@@ -272,7 +284,7 @@ en:
 
 # email_templates/edit
   modify_email_template: Modify email template
-  tooltip: Brackets inside the textarea will automatically be replaced by the necessary values.
+  tooltip: Square brackets inside the content will automatically be replaced with the corresponding values.
 
 # controllers/email_addresses
   email_address_modified: Email address modified
@@ -297,30 +309,36 @@ en:
         locale: Language
         time_zone: Time zone
         per_page: Tickets per page
-        schedule_enabled_false: Always 24/7/365
-        schedule_enabled_true: Work can wait, only during my work hours!
-        prefer_plain_text: Send and receive plain text replies
-        include_quote_in_reply: Include quote of original message in reply
+        schedule_enabled_false: Always 24/7
+        schedule_enabled_true: Work can wait, only during my working hours!
+        prefer_plain_text: Send and receive plain text replies.
+        include_quote_in_reply: Include quote of original message in reply.
 
       ticket:
         from: From email address
+        name: Name
         subject: Subject
         content: Content
         status: Status
         statuses:
-          open: Open
-          closed: Closed
-          deleted: Deleted
-          waiting: Waiting
+          open: open
+          closed: closed
+          deleted: deleted
+          waiting: waiting
+        priorities:
+          unknown: unknown
+          low: low
+          medium: medium
+          high: high
         priority: Priority
         assignee_id: Assignee
         created_at: Created at
-        to: To verified email address
-        orig_to: To email address
-        orig_cc: CC email address
+        to: Verified recipient
+        orig_to: Recipient
+        orig_cc: CC
 
       reply:
-        from: From email address
+        from: Sender
 
       rule:
         filter_field: Field
@@ -336,11 +354,12 @@ en:
           change_status: Change status to
           change_priority: Change priority to
           assign_user: Assign to
+        action_value: Action value
 
       email_address:
         email: Email address
         name: Name
-        default: Use as default outgoing mail address
+        default: Outgoing default
         verification_token: Verified
 
       email_template:
@@ -350,7 +369,7 @@ en:
         message: Message
         kinds:
           user_welcome:
-            template_name: Default user welcome
+            template_name: User welcome
             message: |
               <div>
               Dear [name],
@@ -359,9 +378,9 @@ en:
               Your account for the ticket system Brimir has just been created!
               <br />
               <br />
-              To sign in you will need the following information:
+              To sign in you will need the following credentials:
               <br />
-              E-mail: [email]
+              Email: [email]
               <br />
               Password: [password]
               <br />
@@ -376,16 +395,16 @@ en:
               http://[domain]/users/password/new
               <br />
               <br />
-              With kind regards,
+              Kind regards,
               <br />
               Webmaster [domain]
               <br />
               <br />
-              *** this is an automatically generated email, please do not reply ***
+              *** This is an automatically generated email, please do not reply! ***
               </div>
 
           ticket_received:
-            template_name: Default ticket received
+            template_name: Ticket received
             message: |
               <div>
               Dear [name],
@@ -406,6 +425,9 @@ en:
               <br />
               </div>
 
+          canned_reply:
+            template_name: Canned reply
+
       tenant:
         default_locale: Default language
         ignore_user_agent_locale: Ignore preferred browser language
@@ -414,8 +436,11 @@ en:
         include_conversation_in_replies: Include conversation in reply emails
         logo_url: Logo url
         reply_email_footer: Reply email footer
-        first_reply_ignores_notified_agents: No notifications of first reply to other agents
+        share_drafts: Share drafts with other agents.
         notify_client_when_ticket_is_assigned_or_closed: Notify the client when his ticket is assigned or closed.
         notify_client_when_ticket_is_created: Notify the client when his newly created ticket is received.
         notify_user_when_account_is_created: Notify user when account is created.
-        stylesheet_url: Add the path to your own custom stylesheet.
+        stylesheet_url: Path to custom stylesheet.
+        javascript_url: Path to custom javascript file.
+        ticket_creation_is_open_to_the_world: Tickets creation is open to everybody.
+        ask_for_name: Ask for name on new ticket forms.

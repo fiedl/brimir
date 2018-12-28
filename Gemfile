@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.1.0'
 
 gem 'sass-rails', "~> 5.0.0"
 gem 'coffee-rails', "~> 4.2.0"
@@ -20,9 +20,9 @@ gem 'foundation_rails_helper', "~> 2.0"
 gem 'therubyracer'
 
 # to use debugger
-gem 'byebug', "~> 9.0", group: [:development, :test]
-gem 'pry', "~> 0.10", group: [:development, :test]
 gem 'pry-remote', group: [:development]
+gem 'byebug', '~> 10.0', group: [:development, :test]
+gem 'pry', "~> 0.11", group: [:development, :test]
 
 # We need this to not break the test suite as `assigns` and `assert_template` have been remove and extracted to a gem in Rails 5
 gem 'rails-controller-testing', group: [:test]
@@ -43,7 +43,7 @@ group :test do
   # for coveralls
   gem 'coveralls', "~> 0.8"
 
-  gem 'timecop', "~> 0.8"
+  gem 'timecop', "~> 0.9"
 end
 
 # Optional PostgreSQL for production
@@ -57,25 +57,25 @@ gem 'sqlite3', "~> 1.3", group: :sqlite
 gem 'devise', "~> 4.4"
 gem 'devise_ldap_authenticatable', "~> 0.8"
 
-# mail see https://github.com/mikel/mail/issues/912
-gem 'mail'
+# 2.7.0 appears to have regressions that are fixed in 2.7.1
+gem 'mail', '~> 2.6', '!= 2.7.0'
 
 # omniauth
 gem 'omniauth-google-oauth2', "~> 0.4"
 
 # authorization
-gem 'cancancan', "~> 1.15"
+gem 'cancancan', '~> 2.1', '>= 2.1.4'
 
 # pagination
 gem 'will_paginate', "~> 3.1"
 
 # attachments, thumbnails etc
-gem 'paperclip', "~> 5.1"
+gem 'paperclip', "~> 6.1"
 
 # select2 replacement for selectboxes
 gem 'select2-rails', '~> 3.5' # newer breaks Foundation Reveal on tickets#show
 
-gem 'font-awesome-rails', '~> 4.0'
+gem 'font-awesome-rails', '~> 4.7'
 
 # for language detection
 gem 'http_accept_language', "~> 2.1"
@@ -95,6 +95,12 @@ gem 'gravatar_image_tag', "~> 1.2"
 
 # Captcha for brimir
 gem 'recaptcha', "~> 4.0", require: 'recaptcha/rails'
+
+# talk to RESTful services
+gem 'rest-client', '~> 2.0'
+
+# secure digest
+gem 'digest-sha3'
 
 # Trix WYSIWYG editor
 gem 'trix', "~> 0.10", ">= 0.10.1"

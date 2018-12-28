@@ -27,10 +27,10 @@ class User < ApplicationRecord
       foreign_key: 'assignee_id', dependent: :nullify
   has_many :notifications, dependent: :destroy
 
-  belongs_to :schedule
+  belongs_to :schedule, optional: true
 
-  # identities for omniauth
-  has_many :identities
+  # identities for omniaut
+  has_many :identitie
 
   has_and_belongs_to_many :unread_tickets, class_name: 'Ticket'
 
@@ -44,6 +44,14 @@ class User < ApplicationRecord
   def ldap_before_save
     self.agent = true
   end
+
+  scope :actives, -> {
+    where(active: true)
+  }
+
+  scope :inactives, -> {
+    where(active: false)
+  }
 
   scope :agents, -> {
     where(agent: true)
@@ -83,6 +91,10 @@ class User < ApplicationRecord
     super || name_from_email_address
   end
 
+  def locale
+    (super.blank? ? Rails.configuration.i18n.default_locale : super).to_sym
+  end
+
   def is_working?
     #sanity checks for default behaviour
     return true unless schedule_enabled # this is the default behaviour
@@ -94,9 +106,10 @@ class User < ApplicationRecord
     email.split('@').first
   end
 
+  # notify only active agents
   def self.agents_to_notify
     User.agents
-        .where(notify: true)
+        .where(notify: true).actives
   end
 
   # Does the email address of this user belong to the ticket system
@@ -131,5 +144,9 @@ class User < ApplicationRecord
     if encrypted_password.blank?
       self.password = Devise.friendly_token.first(12)
     end
+  end
+
+  def active_for_authentication?
+      super and self.active
   end
 end

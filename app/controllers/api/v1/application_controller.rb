@@ -16,10 +16,10 @@
 
 class Api::V1::ApplicationController < ActionController::Base
   include MultiTenancy
-  
+
   protect_from_forgery with: :null_session
 
-  before_action :authenticate_user_from_token!
+  before_action :authenticate_user_from_token!, unless: -> { current_user }
   before_action :load_tenant
 
   check_authorization
