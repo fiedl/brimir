@@ -163,6 +163,8 @@
         <%= f.text_field :name, label: false, placeholder: t(:label_name), class: 'select2-create' %>
       <% end %>
       <%= f.button t(:add), type: 'submit', class: 'tiny radius button mtm' %>
+
+      <p><%= link_to t(:if_email_template_exists_for_label_user_will_be_notified), email_templates_path %></p>
     <% end %>
     <a class="close-reveal-modal">&#215;</a>
   </div>

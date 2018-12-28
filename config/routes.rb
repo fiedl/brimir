@@ -27,7 +27,9 @@ Brimir::Application.routes.draw do
 
   resources :email_templates
 
-  resources :labels, only: [:destroy, :update, :index, :edit]
+  resources :labels, only: [:destroy, :update, :index, :edit] do
+    get :edit_email_template, to: 'labels#edit_email_template'
+  end
 
   resources :replies, only: [:create, :new, :update, :show] do
     resource  :split_off, controller: 'tickets/split_off', only: [:create]

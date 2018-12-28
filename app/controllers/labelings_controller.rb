@@ -21,6 +21,10 @@ class LabelingsController < ApplicationController
   def create
     @labeling = Labeling.create(labeling_params)
 
+    if (template = EmailTemplate.find_by(name: @labeling.label.name)) && template.try(:message).present?
+      KnowledgeBaseReply.create_from_label(@labeling.labelable, @labeling.label, current_user).try(:notification_mails).try(:each, &:deliver_now)
+    end
+
     respond_to :js
   end
 

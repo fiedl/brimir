@@ -1,6 +1,7 @@
 <style>
   .reply_body { background-color: white; border: 1px solid #DBDBDB; -webkit-border-radius: 3px; border-radius: 3px; display: block; margin: 6px 0; padding: 10px 12px 0 12px; margin-right: 40px }
   .reply_body.internal { background-color: #fff5da; }
+  .reply_body.knowledge-base { background-color: #a0dffd; }
   img.avatar { -webkit-border-radius: 500px; border-radius: 500px; }
   .show_full_message, .show-ticket-online { text-align: right; font-size: 80%; margin-right: 40px }
   .show-ticket-online { margin-top: -10px; margin-bottom: -10px; }
@@ -36,7 +37,7 @@
                 <%= t(:internal_note)%>:
               <% end %>
             </small>
-            <div class="reply_body <%= 'internal' if reply.internal? %>">
+            <div class="reply_body <%= 'internal' if reply.internal? %> <%= 'knowledge-base' if reply.kind_of?(KnowledgeBaseReply) %>">
               <p>
                 <%= parse_email_reply(reply) %>
               </p>

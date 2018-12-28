@@ -91,11 +91,13 @@ de:
     other: '%{count} Antworten'
   labels: Tags
   label_name: Tag-Bezeichnung
+  edit_knowledge_base_entry: Knowledge-Base-Eintrag bearbeiten
   notification_sent_to: 'Es wurde eine Benachrichtigung an folgende E-Mail Adressen gesendet:'
   no_notifications_sent: 'Es wurde keine Benachrichtigung gesendet.'
   toggle_collapsed_content: Ausgeblendeter Inhalt
   assign_label: Tags zuweisen
   take_ticket_lock_from_user: Bearbeitung des Tickets von %{user} übernehmen.
+  if_email_template_exists_for_label_user_will_be_notified: Wenn für dieses Tag eine Antwort-Vorlage mit dem gleichen Namen existiert, erhält der Benutzer diese Antwort per E-Mail.
 
 # tickets/_change_priority_form
   change: Priorität setzen
@@ -167,8 +169,10 @@ de:
   good_evening: Guten Abend
   your_ticket_has_been_closed: 'Dein Support-Ticket wurde geschlossen. Wenn das Problem noch nicht gelöst wurde, antworte einfach auf diese Nachricht. Für neue Anliegen schreibe bitte eine separate E-Mail. Danke!'
   str_is_working_on_your_ticket: "Dein Anliegen wird jetzt von %{str} bearbeitet."
+  user_as_assigned_label: "%{user} hat das Ticket der Kategorie '%{label}' zugeordnet."
   show_full_message: Vollständige Nachricht anzeigen
   show_ticket_in_brimir: Ticket in Brimir anzeigen
+  has_this_resolved_your_issue: "Hat dieser Hinweis Dein Anliegen lösen können?"
 
 # notificantion_mailer/new_account
   new_account_subject: 'Willkommen bei Brimir!'
