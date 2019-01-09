@@ -34,6 +34,7 @@ class RepliesController < ApplicationController
           }
     }.merge(reply_params.to_h))
 
+    @reply.ticket.assignee ||= current_user if current_user.agent? && !@reply.draft?
     save_reply_and_redirect
   end
 
